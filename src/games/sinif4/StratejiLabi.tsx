@@ -23,14 +23,17 @@ export default function StratejiLabi({ session, state }: { session: SessionManag
   const [input, setInput] = useState(''); const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null)
   const [showSteps, setShowSteps] = useState(false); const [showHint, setShowHint] = useState(false)
   const [round, setRound] = useState(0); const stimRef = useRef(Date.now())
+  const timersRef = useRef<number[]>([])
+  useEffect(() => { return () => { timersRef.current.forEach(t => clearTimeout(t)) } }, [])
+  const safeTimeout = (fn: () => void, ms: number) => { const t = setTimeout(fn, ms) as unknown as number; timersRef.current.push(t); return t }
 
   useEffect(() => {
     setProblem(PROBLEMS[round % PROBLEMS.length])
     setPhase('read'); setInput(''); setFeedback(null); setShowSteps(false); setShowHint(false)
     stimRef.current = Date.now()
     // Auto advance: read → keywords → solve
-    setTimeout(() => setPhase('keywords'), 3500)
-    setTimeout(() => setPhase('solve'), 6000)
+    safeTimeout(() => setPhase('keywords'), 3500)
+    safeTimeout(() => setPhase('solve'), 6000)
   }, [round])
 
   const handleSubmit = () => {
@@ -42,7 +45,7 @@ export default function StratejiLabi({ session, state }: { session: SessionManag
 
     if (correct) { setPhase('review'); setFeedback('correct') }
     else { setFeedback('wrong') }
-    setTimeout(() => { setFeedback(null); if (correct) setTimeout(() => setRound(r => r + 1), 1000); else setRound(r => r + 1) }, correct ? 500 : 2000)
+    safeTimeout(() => { setFeedback(null); if (correct) safeTimeout(() => setRound(r => r + 1), 1000); else setRound(r => r + 1) }, correct ? 500 : 2000)
   }
 
   const phaseLabels = { read: '📖 Problemi Oku', keywords: '🔑 Anahtar Bilgileri Bul', solve: '🧮 Çöz!', review: '✅ Kontrol Et' }

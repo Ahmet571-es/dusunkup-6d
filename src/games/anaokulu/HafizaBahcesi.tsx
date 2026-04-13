@@ -27,6 +27,18 @@ export default function HafizaBahcesi({ session, state }: { session: SessionMana
   const [span, setSpan] = useState(2) // Starting span
   const [round, setRound] = useState(0)
   const stimRef = useRef(Date.now())
+  const timersRef = useRef<number[]>([])
+
+  // Cleanup all timers on unmount
+  useEffect(() => {
+    return () => { timersRef.current.forEach(t => clearTimeout(t)) }
+  }, [])
+
+  const safeTimeout = (fn: () => void, ms: number) => {
+    const t = setTimeout(fn, ms) as unknown as number
+    timersRef.current.push(t)
+    return t
+  }
 
   const difficulty = state.difficultyAxes
   const gridSize = 9 // 3x3 grid
@@ -54,10 +66,10 @@ export default function HafizaBahcesi({ session, state }: { session: SessionMana
     setIsShowingSequence(true)
     stimRef.current = Date.now()
     seq.forEach((cellId, idx) => {
-      setTimeout(() => setActiveCell(cellId), (idx + 1) * 800)
-      setTimeout(() => setActiveCell(null), (idx + 1) * 800 + 500)
+      safeTimeout(() => setActiveCell(cellId), (idx + 1) * 800)
+      safeTimeout(() => setActiveCell(null), (idx + 1) * 800 + 500)
     })
-    setTimeout(() => {
+    safeTimeout(() => {
       setIsShowingSequence(false)
       setActiveCell(null)
     }, (seq.length + 1) * 800)
@@ -91,7 +103,7 @@ export default function HafizaBahcesi({ session, state }: { session: SessionMana
     const newSeq = [...playerSequence, cellId]
     setPlayerSequence(newSeq)
     setActiveCell(cellId)
-    setTimeout(() => setActiveCell(null), 200)
+    safeTimeout(() => setActiveCell(null), 200)
 
     // Check if sequence complete
     if (newSeq.length === sequence.length) {
@@ -109,7 +121,7 @@ export default function HafizaBahcesi({ session, state }: { session: SessionMana
       if (correct) setSpan(s => Math.min(7, s + 1))
       else setSpan(s => Math.max(2, s - 1))
 
-      setTimeout(() => { setFeedback(null); setRound(r => r + 1) }, correct ? 1200 : 900)
+      safeTimeout(() => { setFeedback(null); setRound(r => r + 1) }, correct ? 1200 : 900)
     }
   }
 
@@ -144,10 +156,10 @@ export default function HafizaBahcesi({ session, state }: { session: SessionMana
         // Check all matched
         if (newGrid.every(c => c.isMatched)) {
           setFeedback('correct')
-          setTimeout(() => { setFeedback(null); setRound(r => r + 1) }, 1200)
+          safeTimeout(() => { setFeedback(null); setRound(r => r + 1) }, 1200)
         }
       } else {
-        setTimeout(() => {
+        safeTimeout(() => {
           newGrid[firstCard!] = { ...newGrid[firstCard!], isRevealed: false }
           newGrid[cellId] = { ...newGrid[cellId], isRevealed: false }
           setGrid(newGrid)

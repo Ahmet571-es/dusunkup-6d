@@ -5,7 +5,7 @@
  * Mekanik: Balonlar iniyor, sadece hedef renge dokun
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 

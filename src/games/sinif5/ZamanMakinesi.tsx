@@ -45,6 +45,9 @@ export default function ZamanMakinesi({ session, state }: { session: SessionMana
   const [showAllStrategies, setShowAllStrategies] = useState(false)
   const [round, setRound] = useState(0)
   const stimRef = useRef(Date.now())
+  const timersRef = useRef<number[]>([])
+  useEffect(() => { return () => { timersRef.current.forEach(t => clearTimeout(t)) } }, [])
+  const safeTimeout = (fn: () => void, ms: number) => { const t = setTimeout(fn, ms) as unknown as number; timersRef.current.push(t); return t }
 
   useEffect(() => {
     setProb(PROBLEMS[round % PROBLEMS.length])
@@ -63,14 +66,14 @@ export default function ZamanMakinesi({ session, state }: { session: SessionMana
 
     if (correct) {
       setFeedback('correct')
-      setTimeout(() => { setFeedback(null); setPhase('evaluate') }, 800)
+      safeTimeout(() => { setFeedback(null); setPhase('evaluate') }, 800)
     } else {
       setFeedback('wrong')
       if (attempts >= 1) {
         // After 2 wrong attempts, show rewind
-        setTimeout(() => { setFeedback(null); setPhase('rewind') }, 700)
+        safeTimeout(() => { setFeedback(null); setPhase('rewind') }, 700)
       } else {
-        setTimeout(() => { setFeedback(null); setInput('') }, 700)
+        safeTimeout(() => { setFeedback(null); setInput('') }, 700)
       }
     }
   }
@@ -78,8 +81,8 @@ export default function ZamanMakinesi({ session, state }: { session: SessionMana
   const handleStrategySelect = (idx: number) => {
     setSelectedStrategy(idx)
     session.recordTrial({ timestamp: Date.now(), trialType: 'math', stimulusShownAt: stimRef.current, responseAt: Date.now(), responseTimeMs: Date.now() - stimRef.current, isCorrect: true, isTarget: true, responded: true, difficultyAxes: state.difficultyAxes, metadata: { skillId: 'sinif5_zaman_evaluate', strategyChosen: prob.strategies[idx].name, efficiency: prob.strategies[idx].efficiency } })
-    setTimeout(() => { setShowAllStrategies(true) }, 500)
-    setTimeout(() => { setRound(r => r + 1) }, 3000)
+    safeTimeout(() => { setShowAllStrategies(true) }, 500)
+    safeTimeout(() => { setRound(r => r + 1) }, 3000)
   }
 
   const phaseLabels = { solve: '🧮 Çöz!', evaluate: '🤔 Nasıl çözdün?', rewind: '⏪ Geri Sarma — Stratejileri İncele' }

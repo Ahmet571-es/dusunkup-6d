@@ -58,13 +58,16 @@ export default function KesifGezegeni({ session, state }: { session: SessionMana
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null)
   const [round, setRound] = useState(0)
   const stimRef = useRef(Date.now())
+  const timersRef = useRef<number[]>([])
+  useEffect(() => { return () => { timersRef.current.forEach(t => clearTimeout(t)) } }, [])
+  const safeTimeout = (fn: () => void, ms: number) => { const t = setTimeout(fn, ms) as unknown as number; timersRef.current.push(t); return t }
 
   useEffect(() => {
     setExp(EXPERIMENTS[round % EXPERIMENTS.length])
     setPhase('observe'); setFeedback(null); stimRef.current = Date.now()
     // Auto-advance phases
-    setTimeout(() => setPhase('hypothesis'), 3000)
-    setTimeout(() => setPhase('design'), 6000)
+    safeTimeout(() => setPhase('hypothesis'), 3000)
+    safeTimeout(() => setPhase('design'), 6000)
   }, [round])
 
   const handleAnswer = (idx: number) => {
@@ -74,11 +77,11 @@ export default function KesifGezegeni({ session, state }: { session: SessionMana
 
     if (correct) {
       setFeedback('correct')
-      setTimeout(() => { setPhase('conclude') }, 800)
-      setTimeout(() => { setFeedback(null); setRound(r => r + 1) }, 3000)
+      safeTimeout(() => { setPhase('conclude') }, 800)
+      safeTimeout(() => { setFeedback(null); setRound(r => r + 1) }, 3000)
     } else {
       setFeedback('wrong')
-      setTimeout(() => setFeedback(null), 700)
+      safeTimeout(() => setFeedback(null), 700)
     }
   }
 

@@ -22,13 +22,16 @@ export default function MuhendisIstasyonu({ session, state }: { session: Session
   const [input, setInput] = useState(''); const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null)
   const [showSteps, setShowSteps] = useState(false); const [showHint, setShowHint] = useState(false)
   const [round, setRound] = useState(0); const stimRef = useRef(Date.now())
+  const timersRef = useRef<number[]>([])
+  useEffect(() => { return () => { timersRef.current.forEach(t => clearTimeout(t)) } }, [])
+  const safeTimeout = (fn: () => void, ms: number) => { const t = setTimeout(fn, ms) as unknown as number; timersRef.current.push(t); return t }
 
   useEffect(() => {
     setProblem(PROBLEMS[round % PROBLEMS.length])
     setPhase('read'); setInput(''); setFeedback(null); setShowSteps(false); setShowHint(false)
     stimRef.current = Date.now()
-    setTimeout(() => setPhase('plan'), 4000)
-    setTimeout(() => setPhase('solve'), 7000)
+    safeTimeout(() => setPhase('plan'), 4000)
+    safeTimeout(() => setPhase('solve'), 7000)
   }, [round])
 
   const handleSubmit = () => {
@@ -37,8 +40,8 @@ export default function MuhendisIstasyonu({ session, state }: { session: Session
     if (!correct) setShowSteps(true)
     session.recordTrial({ timestamp: Date.now(), trialType: 'math', stimulusShownAt: stimRef.current, responseAt: Date.now(), responseTimeMs: Date.now() - stimRef.current, isCorrect: correct, isTarget: true, responded: true, difficultyAxes: state.difficultyAxes, metadata: { skillId: 'sinif5_muhendis', multiStep: true, hintUsed: showHint } })
     setFeedback(correct ? 'correct' : 'wrong')
-    if (correct) { setPhase('review'); setTimeout(() => { setFeedback(null); setRound(r => r + 1) }, 1500) }
-    else { setTimeout(() => { setFeedback(null); setRound(r => r + 1) }, 2500) }
+    if (correct) { setPhase('review'); safeTimeout(() => { setFeedback(null); setRound(r => r + 1) }, 1500) }
+    else { safeTimeout(() => { setFeedback(null); setRound(r => r + 1) }, 2500) }
   }
 
   return (

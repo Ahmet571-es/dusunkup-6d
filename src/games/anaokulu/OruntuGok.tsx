@@ -2,7 +2,7 @@
  * Örüntü Gök — Örüntü Tanıma + Mantıksal Düşünme
  * Katmanlar: Tekrarlayan→Üçlü→Büyüyen→Çift Özellik→Kural Keşfi
  */
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
