@@ -1,5 +1,6 @@
 export { default as SayiOrmani } from './SayiOrmani'
 export { default as RenkAdasi } from './RenkAdasi'
+export { default as SekilKasabasi } from './SekilKasabasi'
 export { default as HafizaBahcesi } from './HafizaBahcesi'
+export { default as RitimNehri } from './RitimNehri'
 export { default as OruntuGok } from './OruntuGok'
-// SekilKasabasi and RitimNehri will be added in next iteration

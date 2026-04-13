@@ -6,7 +6,7 @@ import { getGameDef } from '@/games/gameDefinitions'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 // All game imports
-import { SayiOrmani, RenkAdasi, HafizaBahcesi, OruntuGok } from '@/games/anaokulu'
+import { SayiOrmani, RenkAdasi, SekilKasabasi, HafizaBahcesi, RitimNehri, OruntuGok } from '@/games/anaokulu'
 import { ToplamaCesmesi, CikarmaMagarasi, DikkatDenizi, SayiYolu, KuralDegistir, HikayeKopugu } from '@/games/sinif1'
 import { CarpimBahcesi, BolmeFabrikasi, FlankerOkyanus, HafizaLabirenti, ParaPazari, SaatKulesi } from '@/games/sinif2'
 import { KesirMutfagi, GeometriKenti, StroopSavascisi, CiftGorev, VeriGolu, TahminAdasi } from '@/games/sinif3'
@@ -15,7 +15,7 @@ import { MuhendisIstasyonu, VeriBilimLabi, GelismisNback, KesifGezegeni, KesirOn
 
 type GameComp = React.ComponentType<{ session: SessionManager; state: SessionState }>
 const GAMES: Record<string, Record<string, GameComp>> = {
-  anaokulu: { sayi_ormani: SayiOrmani, renk_adasi: RenkAdasi, hafiza_bahcesi: HafizaBahcesi, oruntu_gok: OruntuGok },
+  anaokulu: { sayi_ormani: SayiOrmani, renk_adasi: RenkAdasi, sekil_kasabasi: SekilKasabasi, hafiza_bahcesi: HafizaBahcesi, ritim_nehri: RitimNehri, oruntu_gok: OruntuGok },
   sinif1: { toplama_cesmesi: ToplamaCesmesi, cikarma_magarasi: CikarmaMagarasi, dikkat_denizi: DikkatDenizi, sayi_yolu: SayiYolu, kural_degistir: KuralDegistir, hikaye_kopugu: HikayeKopugu },
   sinif2: { carpim_bahcesi: CarpimBahcesi, bolme_fabrikasi: BolmeFabrikasi, flanker_okyanus: FlankerOkyanus, hafiza_labirenti: HafizaLabirenti, para_pazari: ParaPazari, saat_kulesi: SaatKulesi },
   sinif3: { kesir_mutfagi: KesirMutfagi, geometri_kenti: GeometriKenti, stroop_savascisi: StroopSavascisi, cift_gorev: CiftGorev, veri_golu: VeriGolu, tahmin_adasi: TahminAdasi },
