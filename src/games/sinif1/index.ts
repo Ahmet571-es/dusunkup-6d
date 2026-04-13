@@ -1,0 +1,6 @@
+export { default as ToplamaCesmesi } from './ToplamaCesmesi'
+export { default as CikarmaMagarasi } from './CikarmaMagarasi'
+export { default as DikkatDenizi } from './DikkatDenizi'
+export { default as SayiYolu } from './SayiYolu'
+export { default as KuralDegistir } from './KuralDegistir'
+export { default as HikayeKopugu } from './HikayeKopugu'
