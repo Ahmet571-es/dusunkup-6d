@@ -35,6 +35,7 @@ export default function OndalikOkyanus({ session, state }: { session: SessionMan
       const correct = dir ? c.dec : c.frac
       const wrongs = CONVERSIONS.filter(x => (dir ? x.dec : x.frac) !== correct).sort(() => Math.random() - 0.5).slice(0, 3).map(x => dir ? x.dec : x.frac)
       const opts = [correct, ...wrongs].sort(() => Math.random() - 0.5)
+      if (!opts.includes(correct)) opts[0] = correct
       setOptions(opts); setCorrectIdx(opts.indexOf(correct))
     } else if (m === 'place_value') {
       const num = (Math.floor(Math.random() * 900) + 100) / 100
@@ -45,6 +46,7 @@ export default function OndalikOkyanus({ session, state }: { session: SessionMan
       const correct = numStr[digit]
       const wrongs = ['0','1','2','3','4','5','6','7','8','9'].filter(d => d !== correct).sort(() => Math.random() - 0.5).slice(0, 3)
       const opts = [correct, ...wrongs].sort(() => Math.random() - 0.5)
+      if (!opts.includes(correct)) opts[0] = correct
       setOptions(opts); setCorrectIdx(opts.indexOf(correct))
     } else if (m === 'compare') {
       const a = (Math.floor(Math.random() * 90) + 10) / 100

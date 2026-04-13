@@ -65,7 +65,7 @@ export default function SaatKulesi({ session, state }: { session: SessionManager
       const dur = [30, 45, 60, 90, 120][Math.floor(Math.random() * 5)]
       const correct = `${dur} dakika`
       const opts = [`${dur} dakika`, `${dur + 15} dakika`, `${dur - 15} dakika`, `${dur + 30} dakika`].filter(o => !o.startsWith('-')).slice(0, 4)
-      setOptions(opts.sort(() => Math.random() - 0.5)); setCorrectIdx(opts.sort(() => Math.random() - 0.5).indexOf(correct))
+      const shuffled = [...opts].sort(() => Math.random() - 0.5); if (!shuffled.includes(correct)) shuffled[0] = correct; setOptions(shuffled); setCorrectIdx(shuffled.indexOf(correct))
       const sorted = opts.sort(() => Math.random() - 0.5)
       setOptions(sorted); setCorrectIdx(sorted.indexOf(correct))
     } else {

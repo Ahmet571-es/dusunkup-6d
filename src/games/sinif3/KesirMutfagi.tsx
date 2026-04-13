@@ -93,6 +93,7 @@ export default function KesirMutfagi({ session, state }: { session: SessionManag
       const correct = `${n}/${d}`
       const wrongs = [`${d}/${n}`, `${n + 1}/${d}`, `${Math.max(1, n - 1)}/${d}`, `${n}/${d + 1}`].filter(w => w !== correct)
       const opts = [correct, ...wrongs.slice(0, 3)].sort(() => Math.random() - 0.5)
+      if (!opts.includes(correct)) opts[0] = correct
       setOptions(opts); setCorrectIdx(opts.indexOf(correct))
     } else if (m === 'compare') {
       const n2 = n === 1 ? n + 1 : n - 1; setNum2(n2); setDen2(d)
@@ -102,6 +103,7 @@ export default function KesirMutfagi({ session, state }: { session: SessionManag
       const correct = `${n * mult}/${d * mult}`
       const wrongs = [`${n + mult}/${d + mult}`, `${n * mult}/${d}`, `${n}/${d * mult}`]
       const opts = [correct, ...wrongs].sort(() => Math.random() - 0.5)
+      if (!opts.includes(correct)) opts[0] = correct
       setOptions(opts); setCorrectIdx(opts.indexOf(correct))
     } else {
       // Simple addition with same denominator
@@ -109,6 +111,7 @@ export default function KesirMutfagi({ session, state }: { session: SessionManag
       const correct = `${n + n2}/${d}`
       const wrongs = [`${n + n2}/${d * 2}`, `${n + n2 + 1}/${d}`, `${n + n2}/${d + 1}`]
       const opts = [correct, ...wrongs].sort(() => Math.random() - 0.5)
+      if (!opts.includes(correct)) opts[0] = correct
       setOptions(opts); setCorrectIdx(opts.indexOf(correct))
     }
     setFeedback(null); setShowHint(false); stimRef.current = Date.now()

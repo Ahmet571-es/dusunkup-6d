@@ -64,7 +64,7 @@ export default function SekilKasabasi({ session, state }: { session: SessionMana
         </div>
       ) : (
         <div className="flex gap-3 flex-wrap justify-center">
-          {SHAPES.sort(() => Math.random() - 0.5).slice(0, 4).map((s, i) => (
+          {[...SHAPES].sort(() => Math.random() - 0.5).slice(0, 4).map((s, i) => (
             <motion.button key={i} className="px-5 py-3 rounded-xl text-sm font-bold text-white" style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.1)' }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.92 }} onClick={() => handleName(s.name)}>{s.name}</motion.button>
           ))}
         </div>

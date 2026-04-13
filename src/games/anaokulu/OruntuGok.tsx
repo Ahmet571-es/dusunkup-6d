@@ -27,7 +27,7 @@ function generatePattern(level: number): { sequence: PatternItem[]; answer: Patt
     return { sequence: seq, answer, options: opts.sort(() => Math.random()-0.5) }
   } else if (level <= 4) {
     // ABC-ABC
-    const [a,b,c] = SHAPES.sort(() => Math.random()-0.5).slice(0,3)
+    const [a,b,c] = [...SHAPES].sort(() => Math.random()-0.5).slice(0,3)
     const seq: PatternItem[] = [
       {shape:a,size:1,id:0},{shape:b,size:1,id:1},{shape:c,size:1,id:2},
       {shape:a,size:1,id:3},{shape:b,size:1,id:4},

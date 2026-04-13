@@ -50,9 +50,10 @@ export default function GeometriKenti({ session, state }: { session: SessionMana
     const m = modes[Math.floor(round / 3) % modes.length]; setMode(m)
 
     if (m === 'name') {
-      const opts = SHAPES.sort(() => Math.random() - 0.5).slice(0, 4).map(sh => sh.name)
+      const opts = [...SHAPES].sort(() => Math.random() - 0.5).slice(0, 4).map(sh => sh.name)
       if (!opts.includes(s.name)) opts[0] = s.name
       const sorted = opts.sort(() => Math.random() - 0.5)
+      if (!sorted.includes(s.name)) sorted[0] = s.name
       setOptions(sorted); setCorrectIdx(sorted.indexOf(s.name))
     } else if (m === 'sides') {
       const opts = ['3', '4', '5', '6']
@@ -62,9 +63,10 @@ export default function GeometriKenti({ session, state }: { session: SessionMana
       setOptions(opts); setCorrectIdx(opts.indexOf(String(s.angles)))
     } else {
       // Rotation: which shape is the same but rotated?
-      const opts = SHAPES.sort(() => Math.random() - 0.5).slice(0, 4).map(sh => sh.name)
+      const opts = [...SHAPES].sort(() => Math.random() - 0.5).slice(0, 4).map(sh => sh.name)
       if (!opts.includes(s.name)) opts[0] = s.name
       const sorted = opts.sort(() => Math.random() - 0.5)
+      if (!sorted.includes(s.name)) sorted[0] = s.name
       setOptions(sorted); setCorrectIdx(sorted.indexOf(s.name))
     }
     setFeedback(null); setShowHint(false); stimRef.current = Date.now()
