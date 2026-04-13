@@ -1,0 +1,13 @@
+{
+  "name": "DüşünKüp 6D — Bilişsel Gelişim Platformu",
+  "short_name": "DüşünKüp 6D",
+  "description": "Bilimsel temelli çocuk dikkat ve matematik geliştirme sistemi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060A1A",
+  "theme_color": "#060A1A",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/vite.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
