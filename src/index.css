@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  /* === Deep Space Theme (Child) === */
+  --color-cosmos-deep: #060A1A;
+  --color-cosmos-mid: #0C1428;
+  --color-cosmos-light: #141E38;
+  
+  /* === Accent Colors === */
+  --color-accent-pink: #F472B6;
+  --color-accent-blue: #60A5FA;
+  --color-accent-green: #34D399;
+  --color-accent-yellow: #FBBF24;
+  --color-accent-purple: #A78BFA;
+  --color-accent-orange: #F97316;
+  --color-accent-red: #EF4444;
+  --color-accent-cyan: #06B6D4;
+  
+  /* === Teacher Panel === */
+  --color-teacher-bg: #F0F4F8;
+  --color-teacher-card: #FFFFFF;
+  --color-teacher-primary: #1A2744;
+  --color-teacher-accent: #2563EB;
+  --color-teacher-text: #334155;
+  --color-teacher-muted: #64748B;
+  --color-teacher-success: #16A34A;
+  --color-teacher-warning: #F59E0B;
+  --color-teacher-danger: #DC2626;
+  
+  /* === Grade Colors === */
+  --color-grade-anaokulu: #F43F5E;
+  --color-grade-sinif1: #F59E0B;
+  --color-grade-sinif2: #10B981;
+  --color-grade-sinif3: #3B82F6;
+  --color-grade-sinif4: #8B5CF6;
+  --color-grade-sinif5: #F97316;
+  
+  /* === Typography === */
+  --font-child: 'Baloo 2', sans-serif;
+  --font-teacher: 'Quicksand', sans-serif;
+}
+
+@layer base {
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
+  body {
+    background: var(--color-cosmos-deep);
+    color: #F1F5F9;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* === Google Fonts === */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap');
+
+/* === Animations === */
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes twinkle { 0% { opacity: 0.15; transform: scale(0.7); } 100% { opacity: 1; transform: scale(1.3); } }
+@keyframes pulse-glow { 0%,100% { box-shadow: 0 0 20px currentColor; } 50% { box-shadow: 0 0 40px currentColor; } }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes bounce-in { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
