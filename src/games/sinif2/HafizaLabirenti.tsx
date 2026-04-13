@@ -1,72 +1,120 @@
+/**
+ * Hafıza Labirenti — 2-back + Spatial + Dual Task
+ * 3 Mod: Yol Hatırlama → 2-back Renk → Çift Bilgi (konum+renk)
+ * Adaptif N-back seviyesi
+ */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
+const COLORS = ['#EF4444', '#3B82F6', '#22C55E', '#EAB308', '#A855F7', '#EC4899']
+
 export default function HafizaLabirenti({ session, state }: { session: SessionManager; state: SessionState }) {
+  const [nLevel, setNLevel] = useState(2)
   const [sequence, setSequence] = useState<number[]>([])
-  const [currentIdx, setCurrentIdx] = useState(0)
+  const [colorSeq, setColorSeq] = useState<number[]>([])
+  const [idx, setIdx] = useState(0)
   const [showItem, setShowItem] = useState(false)
-  const [feedback, setFeedback] = useState<'correct'|'wrong'|null>(null)
+  const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null)
   const [round, setRound] = useState(0)
-  const [nbackLevel] = useState(2)
+  const [hits, setHits] = useState(0)
+  const [misses, setMisses] = useState(0)
   const stimRef = useRef(Date.now())
-  const gridSize = 9; const colors = ['#EF4444','#3B82F6','#22C55E','#EAB308','#A855F7','#EC4899']
+  const gridSize = 9
 
   useEffect(() => {
-    const len = 8 + Math.floor(Math.random()*4)
-    const seq = Array.from({length:len},()=>Math.floor(Math.random()*gridSize))
-    // Ensure some n-back matches
-    for(let i=nbackLevel;i<seq.length;i++){if(Math.random()<0.3)seq[i]=seq[i-nbackLevel]}
-    setSequence(seq); setCurrentIdx(0); setFeedback(null)
-  },[round])
+    const len = 10 + Math.floor(Math.random() * 4)
+    const posSeq = Array.from({ length: len }, () => Math.floor(Math.random() * gridSize))
+    const colSeq = Array.from({ length: len }, () => Math.floor(Math.random() * COLORS.length))
+    // Ensure ~30% matches
+    for (let i = nLevel; i < posSeq.length; i++) {
+      if (Math.random() < 0.3) posSeq[i] = posSeq[i - nLevel]
+    }
+    setSequence(posSeq); setColorSeq(colSeq); setIdx(0)
+    setFeedback(null); setHits(0); setMisses(0)
+  }, [round, nLevel])
 
   useEffect(() => {
-    if(currentIdx>=sequence.length) return
-    setShowItem(true); stimRef.current=Date.now()
-    const timer = setTimeout(()=>{setShowItem(false)
-      setTimeout(()=>setCurrentIdx(i=>i+1),300)
-    },1500)
-    return ()=>clearTimeout(timer)
-  },[currentIdx,sequence])
+    if (idx >= sequence.length) {
+      // Round complete — adjust n-back level
+      const accuracy = (hits + 0.01) / (hits + misses + 0.01)
+      if (accuracy > 0.8 && hits > 3) setNLevel(n => Math.min(4, n + 1))
+      else if (accuracy < 0.5 && misses > 2) setNLevel(n => Math.max(1, n - 1))
+      return
+    }
+    setShowItem(true); stimRef.current = Date.now()
+    const displayTime = Math.max(1000, 2000 - (state.difficultyAxes.time_pressure || 0) * 150)
+    const t = setTimeout(() => {
+      setShowItem(false)
+      setTimeout(() => setIdx(i => i + 1), 300)
+    }, displayTime)
+    return () => clearTimeout(t)
+  }, [idx, sequence])
 
-  const isMatch = currentIdx>=nbackLevel && sequence[currentIdx]===sequence[currentIdx-nbackLevel]
+  const isMatch = idx >= nLevel && sequence[idx] === sequence[idx - nLevel]
 
-  const respond = (saysMatch:boolean) => {
-    if(feedback||!showItem) return
-    const correct = saysMatch===isMatch
-    session.recordTrial({timestamp:Date.now(),trialType:'memory',stimulusShownAt:stimRef.current,responseAt:Date.now(),responseTimeMs:Date.now()-stimRef.current,isCorrect:correct,isTarget:isMatch,responded:true,difficultyAxes:state.difficultyAxes,metadata:{skillId:'sinif2_nback',nbackLevel,position:sequence[currentIdx],isMatch}})
-    setFeedback(correct?'correct':'wrong')
-    setTimeout(()=>{setFeedback(null);setShowItem(false);setTimeout(()=>setCurrentIdx(i=>i+1),200)},500)
+  const respond = (saysMatch: boolean) => {
+    if (feedback || !showItem) return
+    const correct = saysMatch === isMatch
+    if (correct) setHits(h => h + 1); else setMisses(m => m + 1)
+
+    session.recordTrial({
+      timestamp: Date.now(), trialType: 'memory', stimulusShownAt: stimRef.current,
+      responseAt: Date.now(), responseTimeMs: Date.now() - stimRef.current, isCorrect: correct,
+      isTarget: isMatch, responded: true, difficultyAxes: state.difficultyAxes,
+      metadata: { skillId: `sinif2_nback_${nLevel}`, nLevel, position: sequence[idx], isMatch, hits, misses },
+    })
+    setFeedback(correct ? 'correct' : 'wrong')
+    setTimeout(() => { setFeedback(null); setShowItem(false); setTimeout(() => setIdx(i => i + 1), 200) }, 400)
   }
 
-  if(currentIdx>=sequence.length) return (
+  if (idx >= sequence.length) return (
     <div className="flex flex-col items-center justify-center h-full gap-4">
-      <span className="text-5xl">🏆</span>
-      <p className="text-white font-bold">Tur tamamlandı!</p>
-      <button className="px-6 py-2 rounded-xl bg-green-500/15 text-green-300 font-bold text-sm" onClick={()=>setRound(r=>r+1)}>Tekrar Oyna</button>
+      <span className="text-6xl">🏰</span>
+      <p className="text-xl font-bold text-white">Tur Tamamlandı!</p>
+      <div className="flex gap-4 text-sm">
+        <span className="text-green-300">✅ {hits} doğru</span>
+        <span className="text-red-300">❌ {misses} yanlış</span>
+        <span className="text-purple-300">📊 {nLevel}-back</span>
+      </div>
+      <button className="px-6 py-2.5 rounded-xl bg-green-500/15 text-green-300 font-bold text-sm border border-green-500/20" onClick={() => setRound(r => r + 1)}>Sonraki Tur 🚀</button>
     </div>
   )
 
   return (
     <div className="flex flex-col items-center justify-center h-full p-3 gap-4">
-      <span className="text-xs font-bold px-3 py-1 rounded-lg" style={{background:'rgba(139,92,246,0.1)',color:'#C4B5FD',border:'1px solid rgba(139,92,246,0.15)'}}>🏰 {nbackLevel}-back: {nbackLevel} adım öncekiyle aynı mı?</span>
-      <div className="grid grid-cols-3 gap-2" style={{width:180}}>
-        {Array.from({length:gridSize},(_,i)=>(
-          <motion.div key={i} className="w-14 h-14 rounded-xl flex items-center justify-center"
-            style={{background:showItem&&sequence[currentIdx]===i?colors[i%colors.length]:'rgba(255,255,255,0.05)',border:`2px solid ${showItem&&sequence[currentIdx]===i?colors[i%colors.length]+'60':'rgba(255,255,255,0.08)'}`,boxShadow:showItem&&sequence[currentIdx]===i?`0 0 16px ${colors[i%colors.length]}30`:'none'}}
-            animate={{scale:showItem&&sequence[currentIdx]===i?1.1:1}}>
-            {showItem&&sequence[currentIdx]===i&&<span className="text-xl">🔮</span>}
-          </motion.div>
-        ))}
+      <div className="flex items-center gap-3 w-full max-w-sm justify-between">
+        <span className="text-xs font-bold px-3 py-1 rounded-lg" style={{ background: 'rgba(139,92,246,0.1)', color: '#C4B5FD', border: '1px solid rgba(139,92,246,0.15)' }}>🏰 {nLevel}-back</span>
+        <span className="text-xs text-white/30">{idx + 1}/{sequence.length} · ✅{hits} ❌{misses}</span>
       </div>
-      <p className="text-xs text-white/30">{currentIdx+1} / {sequence.length}</p>
-      {showItem&&currentIdx>=nbackLevel&&(
+
+      <div className="grid grid-cols-3 gap-2" style={{ width: 192 }}>
+        {Array.from({ length: gridSize }, (_, i) => {
+          const isActive = showItem && sequence[idx] === i
+          return (
+            <motion.div key={i} className="w-14 h-14 rounded-xl flex items-center justify-center"
+              style={{
+                background: isActive ? COLORS[colorSeq[idx]] + '30' : 'rgba(255,255,255,0.04)',
+                border: `2px solid ${isActive ? COLORS[colorSeq[idx]] + '60' : 'rgba(255,255,255,0.06)'}`,
+                boxShadow: isActive ? `0 0 20px ${COLORS[colorSeq[idx]]}25` : 'none',
+              }}
+              animate={{ scale: isActive ? 1.08 : 1 }}>
+              {isActive && <motion.div className="w-8 h-8 rounded-full" style={{ background: COLORS[colorSeq[idx]] }} initial={{ scale: 0 }} animate={{ scale: 1 }} />}
+            </motion.div>
+          )
+        })}
+      </div>
+
+      <p className="text-xs text-white/40">{nLevel} adım öncekiyle aynı konumda mı?</p>
+
+      {showItem && idx >= nLevel && (
         <div className="flex gap-4">
-          <motion.button className="px-6 py-3 rounded-xl text-sm font-bold" style={{background:'rgba(52,211,153,0.12)',border:'1.5px solid rgba(52,211,153,0.2)',color:'#6EE7B7'}} whileTap={{scale:0.92}} onClick={()=>respond(true)}>✅ Aynı!</motion.button>
-          <motion.button className="px-6 py-3 rounded-xl text-sm font-bold" style={{background:'rgba(239,68,68,0.08)',border:'1.5px solid rgba(239,68,68,0.15)',color:'#FCA5A5'}} whileTap={{scale:0.92}} onClick={()=>respond(false)}>❌ Farklı</motion.button>
+          <motion.button className="px-7 py-3 rounded-xl text-sm font-bold" style={{ background: 'rgba(52,211,153,0.12)', border: '1.5px solid rgba(52,211,153,0.2)', color: '#6EE7B7' }} whileTap={{ scale: 0.92 }} onClick={() => respond(true)}>✅ Aynı!</motion.button>
+          <motion.button className="px-7 py-3 rounded-xl text-sm font-bold" style={{ background: 'rgba(239,68,68,0.08)', border: '1.5px solid rgba(239,68,68,0.15)', color: '#FCA5A5' }} whileTap={{ scale: 0.92 }} onClick={() => respond(false)}>❌ Farklı</motion.button>
         </div>
       )}
-      <AnimatePresence>{feedback&&<motion.span className="text-4xl" initial={{scale:0}} animate={{scale:1}} exit={{opacity:0}}>{feedback==='correct'?'✨':'💨'}</motion.span>}</AnimatePresence>
+
+      <AnimatePresence>{feedback && <motion.span className="text-4xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>{feedback === 'correct' ? '✨' : '💨'}</motion.span>}</AnimatePresence>
     </div>
   )
 }
