@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import GameShell from '@/games/GameShell'
+import GameErrorBoundary from '@/components/shared/GameErrorBoundary'
 import { useAppStore } from '@/stores/appStore'
 import { getGameDef } from '@/games/gameDefinitions'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
@@ -40,11 +41,13 @@ export default function GamePage() {
   )
 
   return (
+    <GameErrorBoundary>
     <GameShell>{(session, state) => GameComponent
       ? <GameComponent session={session} state={state} />
       : <div className="flex items-center justify-center h-full"><motion.div className="max-w-md rounded-3xl p-8 text-center" style={{background:`hsla(${gameDef.hue},50%,15%,0.6)`,border:`1px solid hsla(${gameDef.hue},50%,40%,0.2)`}} initial={{opacity:0}} animate={{opacity:1}}>
           <span className="text-7xl block mb-4">{gameDef.emoji}</span><h2 className="text-2xl font-extrabold text-white mb-2">{gameDef.name}</h2><p className="text-white/40 text-sm">Yakında</p>
         </motion.div></div>
     }</GameShell>
+    </GameErrorBoundary>
   )
 }

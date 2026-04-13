@@ -134,7 +134,7 @@ export default function GameShell({ children }: GameShellProps) {
       </div>
 
       {/* Game Area */}
-      <div className="flex-1 relative z-10">
+      <div className="flex-1 relative z-10 overflow-y-auto">
         {children(sessionRef.current, sessionState)}
       </div>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { login, isLoggedIn } from '@/lib/teacherAuth'
@@ -11,7 +11,9 @@ export default function TeacherLoginPage() {
   const [loading, setLoading] = useState(false)
 
   // Auto-redirect if already logged in
-  if (isLoggedIn()) { navigate('/teacher/dashboard'); return null; }
+  useEffect(() => {
+    if (isLoggedIn()) navigate('/teacher/dashboard')
+  }, [navigate])
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()

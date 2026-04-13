@@ -61,17 +61,17 @@ export default function TeacherDashboardPage() {
 
         {/* Class Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <AnimatePresence>
+          <div className="contents">
             {classes.map((c, i) => {
               const stats = getClassStats(c.id)
               return (
                 <motion.div key={c.id}
                   className="bg-white rounded-2xl p-5 cursor-pointer border border-gray-100 hover:shadow-lg transition-all relative overflow-hidden group"
+                  style={{ position: 'relative', zIndex: 1 }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ delay: i * 0.05 }}
-                  onClick={() => navigate(`/teacher/class/${c.id}`)}
+                  onPointerUp={() => navigate(`/teacher/class/${c.id}`)}
                 >
                   <div className="absolute top-0 left-0 right-0 h-1.5 rounded-t-2xl" style={{ background: GRADE_COLORS[c.grade_level] }} />
                   
@@ -110,7 +110,7 @@ export default function TeacherDashboardPage() {
                 </motion.div>
               )
             })}
-          </AnimatePresence>
+          </div>
         </div>
       </div>
 
