@@ -1,0 +1,6 @@
+export { default as CarpimBahcesi } from './CarpimBahcesi'
+export { default as BolmeFabrikasi } from './BolmeFabrikasi'
+export { default as FlankerOkyanus } from './FlankerOkyanus'
+export { default as HafizaLabirenti } from './HafizaLabirenti'
+export { default as ParaPazari } from './ParaPazari'
+export { default as SaatKulesi } from './SaatKulesi'

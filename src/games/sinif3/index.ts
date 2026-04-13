@@ -1,0 +1,6 @@
+export { default as KesirMutfagi } from './KesirMutfagi'
+export { default as GeometriKenti } from './GeometriKenti'
+export { default as StroopSavascisi } from './StroopSavascisi'
+export { default as CiftGorev } from './CiftGorev'
+export { default as VeriGolu } from './VeriGolu'
+export { default as TahminAdasi } from './TahminAdasi'

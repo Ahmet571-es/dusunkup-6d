@@ -1,0 +1,6 @@
+export { default as OndalikOkyanus } from './OndalikOkyanus'
+export { default as AlanCevreKalesi } from './AlanCevreKalesi'
+export { default as NbackRadari } from './NbackRadari'
+export { default as StratejiLabi } from './StratejiLabi'
+export { default as DonusumAtolyesi } from './DonusumAtolyesi'
+export { default as KodKirici } from './KodKirici'
