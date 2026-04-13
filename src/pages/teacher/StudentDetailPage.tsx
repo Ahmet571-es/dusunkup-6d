@@ -101,7 +101,7 @@ export default function StudentDetailPage() {
   const weeks = ['H1','H2','H3','H4','H5','H6']
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--color-teacher-bg)', fontFamily: 'var(--font-teacher)' }}>
+    <div className="min-h-screen pb-16" style={{ background: 'var(--color-teacher-bg)', fontFamily: 'var(--font-teacher)' }}>
       <TeacherNav />
 
       <div className="max-w-5xl mx-auto p-6">
