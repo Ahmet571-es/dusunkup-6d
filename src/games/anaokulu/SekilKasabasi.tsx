@@ -19,12 +19,26 @@ const SHAPES = [
 
 function ShapeSVG({ shape, size = 60, rotation = 0, scale = 1 }: { shape: typeof SHAPES[0]; size?: number; rotation?: number; scale?: number }) {
   const s = size * scale
+  const id = shape.color.replace('#','')
   return (
     <svg width={s} height={s} viewBox="0 0 50 50">
-      <g transform={`rotate(${rotation} 25 25)`}>
+      <defs>
+        <filter id={`glow_${id}`}>
+          <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor={shape.color} floodOpacity="0.4" />
+        </filter>
+        <radialGradient id={`fill_${id}`} cx="35%" cy="35%">
+          <stop offset="0%" stopColor={shape.color} stopOpacity="0.5" />
+          <stop offset="100%" stopColor={shape.color} stopOpacity="0.15" />
+        </radialGradient>
+      </defs>
+      <g transform={`rotate(${rotation} 25 25)`} filter={`url(#glow_${id})`}>
         {shape.isCircle
-          ? <circle cx="25" cy="25" r="18" fill={shape.color + '30'} stroke={shape.color} strokeWidth="2.5" />
-          : <path d={shape.path} fill={shape.color + '25'} stroke={shape.color} strokeWidth="2.5" strokeLinejoin="round" />}
+          ? <circle cx="25" cy="25" r="18" fill={`url(#fill_${id})`} stroke={shape.color} strokeWidth="2.5" />
+          : <path d={shape.path} fill={`url(#fill_${id})`} stroke={shape.color} strokeWidth="2.5" strokeLinejoin="round" />}
+        {/* Inner highlight */}
+        {shape.isCircle
+          ? <circle cx="20" cy="20" r="6" fill="white" opacity="0.1" />
+          : null}
       </g>
     </svg>
   )

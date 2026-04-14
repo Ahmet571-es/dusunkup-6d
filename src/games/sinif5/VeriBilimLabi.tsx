@@ -17,7 +17,7 @@ function BarChart({ values, labels, height = 120 }: { values: number[]; labels: 
       {values.map((v, i) => (
         <div key={i} className="flex flex-col items-center flex-1 max-w-[40px]">
           <span className="text-[9px] font-bold text-white/50 mb-1">{v}</span>
-          <motion.div className="w-full rounded-t" style={{ background: BAR_COLORS[i % BAR_COLORS.length] }}
+          <motion.div className="w-full rounded-t" style={{ background: `linear-gradient(180deg, ${BAR_COLORS[i % BAR_COLORS.length]}ee, ${BAR_COLORS[i % BAR_COLORS.length]}88)`, boxShadow: `0 0 8px ${BAR_COLORS[i % BAR_COLORS.length]}30, inset 0 2px 4px rgba(255,255,255,0.15)` }}
             initial={{ height: 0 }} animate={{ height: `${(v / max) * (height - 30)}px` }}
             transition={{ delay: i * 0.08, duration: 0.5 }} />
           <span className="text-[8px] text-white/30 mt-1 text-center truncate w-full">{labels[i]}</span>

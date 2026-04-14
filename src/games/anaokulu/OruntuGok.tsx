@@ -99,7 +99,7 @@ export default function OruntuGok({ session, state }: { session: SessionManager;
           {pattern.sequence.map((item, i) => (
             <motion.div key={item.id}
               className={`w-14 h-14 rounded-xl flex items-center justify-center ${SIZES[item.size]}`}
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1.5px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.05)' }}
               initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}>
               {item.shape}

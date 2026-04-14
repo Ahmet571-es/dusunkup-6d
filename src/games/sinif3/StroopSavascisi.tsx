@@ -94,7 +94,7 @@ export default function StroopSavascisi({ session, state }: { session: SessionMa
           ))}
         </div>
       ) : (
-        <motion.div key={round} className="text-7xl font-black" style={{ color: trial.inkColor, textShadow: `0 0 30px ${trial.inkColor}40` }}
+        <motion.div key={round} className="text-7xl font-black" style={{ color: trial.inkColor, textShadow: `0 0 30px ${trial.inkColor}50, 0 0 60px ${trial.inkColor}20, 0 4px 12px rgba(0,0,0,0.4)` }}
           initial={{ scale: 0, rotate: -10 }} animate={{ scale: 1, rotate: 0 }}>
           {trial.word}
         </motion.div>

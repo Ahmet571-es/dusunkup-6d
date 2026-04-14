@@ -26,7 +26,7 @@ function PieChart({ percent, size = 80 }: { percent: number; size?: number }) {
   const x = cx + Math.cos(rad) * r; const y = cy + Math.sin(rad) * r
   return (
     <svg width={size} height={size}>
-      <circle cx={cx} cy={cy} r={r} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+      <circle cx={cx} cy={cy} r={r} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" style={{filter: "drop-shadow(0 0 6px rgba(59,130,246,0.2))"}} />
       {percent > 0 && percent < 100 && (
         <path d={`M${cx},${cy} L${cx},${cy - r} A${r},${r} 0 ${large} 1 ${x},${y} Z`} fill="rgba(59,130,246,0.4)" stroke="rgba(59,130,246,0.6)" strokeWidth="1" />
       )}

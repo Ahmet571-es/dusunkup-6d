@@ -63,7 +63,7 @@ export default function MuhendisIstasyonu({ session, state }: { session: Session
         {(phase === 'plan' || phase === 'solve' || phase === 'review') && (
           <div className="flex gap-2 flex-wrap mb-3">
             {problem.keywords.map((kw, i) => (
-              <motion.span key={i} className="px-2 py-1 rounded-md text-xs font-bold" style={{ background: 'rgba(239,68,68,0.08)', color: '#FCA5A5', border: '1px solid rgba(239,68,68,0.15)' }}
+              <motion.span key={i} className="px-2 py-1 rounded-md text-xs font-bold" style={{ background: 'linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.04))', color: '#FCA5A5', border: '1px solid rgba(239,68,68,0.2)', boxShadow: '0 2px 8px rgba(239,68,68,0.12)' }}
                 initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                 📌 {kw}
               </motion.span>

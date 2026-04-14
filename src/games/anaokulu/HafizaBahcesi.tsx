@@ -188,8 +188,8 @@ export default function HafizaBahcesi({ session, state }: { session: SessionMana
             <motion.div key={cell.id}
               className="aspect-square rounded-xl flex items-center justify-center cursor-pointer relative overflow-hidden"
               style={{
-                background: (mode === 'spatial' && activeCell === i) ? cell.color
-                  : (mode === 'matching' && (cell.isRevealed || cell.isMatched)) ? cell.color
+                background: (mode === 'spatial' && activeCell === i) ? `radial-gradient(circle at 40% 40%, ${cell.color}ee, ${cell.color}88)`
+                  : (mode === 'matching' && (cell.isRevealed || cell.isMatched)) ? `radial-gradient(circle at 40% 40%, ${cell.color}dd, ${cell.color}77)`
                   : 'rgba(255,255,255,0.06)',
                 border: `2px solid ${(activeCell === i || cell.isRevealed) ? cell.color + '60' : 'rgba(255,255,255,0.08)'}`,
                 boxShadow: activeCell === i ? `0 0 20px ${cell.color}40` : 'none',

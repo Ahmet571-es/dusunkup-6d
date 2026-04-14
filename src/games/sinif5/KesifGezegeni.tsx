@@ -92,7 +92,7 @@ export default function KesifGezegeni({ session, state }: { session: SessionMana
     <div className="flex flex-col items-center justify-center h-full p-3 gap-3">
       {/* Phase indicator */}
       <div className="flex items-center gap-2 w-full max-w-lg justify-between">
-        <span className="text-xs font-bold px-3 py-1 rounded-lg" style={{ background: `${phaseColors[phase]}15`, color: phaseColors[phase], border: `1px solid ${phaseColors[phase]}30` }}>
+        <span className="text-xs font-bold px-3 py-1 rounded-lg" style={{ background: `linear-gradient(135deg, ${phaseColors[phase]}18, ${phaseColors[phase]}08)`, color: phaseColors[phase], border: `1px solid ${phaseColors[phase]}35`, boxShadow: `0 2px 8px ${phaseColors[phase]}15` }}>
           🔭 {phaseLabels[phase]}
         </span>
         <div className="flex gap-1.5">

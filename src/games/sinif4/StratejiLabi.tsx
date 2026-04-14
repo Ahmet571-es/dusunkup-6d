@@ -68,7 +68,7 @@ export default function StratejiLabi({ session, state }: { session: SessionManag
         {(phase === 'keywords' || phase === 'solve' || phase === 'review') && (
           <div className="flex gap-2 flex-wrap mb-3">
             {problem.keywords.map((kw, i) => (
-              <motion.span key={i} className="px-2 py-1 rounded-md text-xs font-bold" style={{ background: 'rgba(236,72,153,0.1)', color: '#F9A8D4', border: '1px solid rgba(236,72,153,0.2)' }}
+              <motion.span key={i} className="px-2 py-1 rounded-md text-xs font-bold" style={{ background: 'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(236,72,153,0.05))', color: '#F9A8D4', border: '1px solid rgba(236,72,153,0.25)', boxShadow: '0 2px 8px rgba(236,72,153,0.15)' }}
                 initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.15 }}>
                 {kw}
               </motion.span>

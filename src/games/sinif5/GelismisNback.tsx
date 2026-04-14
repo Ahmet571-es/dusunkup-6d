@@ -111,7 +111,7 @@ export default function GelismisNback({ session, state }: { session: SessionMana
             const isActive = showItem && posSeq[idx] === i
             return (
               <div key={i} className="w-12 h-12 rounded-lg flex items-center justify-center"
-                style={{ background: isActive ? 'rgba(168,85,247,0.15)' : 'rgba(255,255,255,0.03)', border: `1.5px solid ${isActive ? 'rgba(168,85,247,0.4)' : 'rgba(255,255,255,0.06)'}` }}>
+                style={{ background: isActive ? 'radial-gradient(circle, rgba(168,85,247,0.2), rgba(168,85,247,0.08))' : 'rgba(255,255,255,0.03)', border: `1.5px solid ${isActive ? 'rgba(168,85,247,0.4)' : 'rgba(255,255,255,0.06)'}`, boxShadow: isActive ? '0 0 15px rgba(168,85,247,0.25), inset 0 0 10px rgba(168,85,247,0.1)' : '0 2px 4px rgba(0,0,0,0.15)' }}>
                 {isActive && <motion.span className="text-2xl" initial={{ scale: 0 }} animate={{ scale: 1 }}>{mode === 'dual' ? SHAPES[shapeSeq[idx]] : '🔮'}</motion.span>}
               </div>
             )

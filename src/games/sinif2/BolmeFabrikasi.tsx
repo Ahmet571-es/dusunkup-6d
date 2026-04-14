@@ -98,7 +98,7 @@ export default function BolmeFabrikasi({ session, state }: { session: SessionMan
         {problem.visual === 'group' && (
           <div className="flex justify-center gap-2 mb-3 flex-wrap">
             {Array.from({ length: Math.min(Math.ceil(problem.a / problem.b), 10) }, (_, g) => (
-              <motion.div key={g} className="flex gap-0.5 px-2 py-1 rounded-lg" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.12)' }}
+              <motion.div key={g} className="flex gap-0.5 px-2 py-1 rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.04))', border: '1px solid rgba(16,185,129,0.15)', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}
                 initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: g * 0.1 }}>
                 {Array.from({ length: problem.b }, (_, i) => <span key={i} className="text-sm">🍎</span>)}
               </motion.div>

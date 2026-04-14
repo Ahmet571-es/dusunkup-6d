@@ -35,7 +35,7 @@ const COINS = [
 function CoinSVG({ coin, size = 28 }: { coin: typeof COINS[0]; size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 30 30">
-      <circle cx="15" cy="15" r="13" fill={coin.color + '30'} stroke={coin.color} strokeWidth="2" />
+      <circle cx="15" cy="15" r="13" fill={coin.color + '30'} stroke={coin.color} strokeWidth="2"><animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" /></circle>
       <circle cx="15" cy="15" r="9" fill="none" stroke={coin.color + '40'} strokeWidth="0.5" />
       <text x="15" y="18" textAnchor="middle" fill={coin.color} fontSize="9" fontWeight="bold">{coin.value}</text>
     </svg>

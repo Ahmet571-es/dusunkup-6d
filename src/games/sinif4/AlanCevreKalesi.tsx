@@ -52,7 +52,7 @@ function GridSVG({ w, h, mode, w2, h2 }: { w: number; h: number; mode: AreaMode;
             </motion.div>
           ))}
         </div>
-        {isPerimeter && <div className="absolute inset-0" style={{ border: '3px solid #06B6D4', borderRadius: 2 }} />}
+        {isPerimeter && <div className="absolute inset-0" style={{ border: '3px solid #06B6D4', borderRadius: 2, boxShadow: '0 0 12px rgba(6,182,212,0.3), inset 0 0 8px rgba(6,182,212,0.1)' }} />}
         <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs font-bold text-green-300">{w} br</span>
         <span className="absolute top-1/2 -right-9 -translate-y-1/2 text-xs font-bold text-green-300">{h} br</span>
       </div>

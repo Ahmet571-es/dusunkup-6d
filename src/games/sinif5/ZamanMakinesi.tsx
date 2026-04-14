@@ -120,7 +120,7 @@ export default function ZamanMakinesi({ session, state }: { session: SessionMana
             <p className="text-sm text-green-300 text-center font-bold mb-3">✅ Doğru! Şimdi: hangi stratejiyi kullandın?</p>
             {prob.strategies.map((s, i) => (
               <motion.button key={i} className="w-full p-3 rounded-xl text-left"
-                style={{ background: selectedStrategy === i ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.03)', border: `1.5px solid ${selectedStrategy === i ? 'rgba(99,102,241,0.3)' : 'rgba(255,255,255,0.06)'}` }}
+                style={{ background: selectedStrategy === i ? 'linear-gradient(135deg, rgba(99,102,241,0.18), rgba(99,102,241,0.08))' : 'rgba(255,255,255,0.03)', border: `1.5px solid ${selectedStrategy === i ? 'rgba(99,102,241,0.35)' : 'rgba(255,255,255,0.06)'}`, boxShadow: selectedStrategy === i ? '0 4px 12px rgba(99,102,241,0.2), inset 0 1px 1px rgba(255,255,255,0.05)' : '0 2px 4px rgba(0,0,0,0.15)' }}
                 whileHover={{ scale: 1.01 }} onClick={() => !selectedStrategy && handleStrategySelect(i)}
                 initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
                 <span className="text-sm font-bold text-white">{s.name}</span>

@@ -94,7 +94,7 @@ export default function TahminAdasi({ session, state }: { session: SessionManage
           style={{ background: 'rgba(10,15,30,0.7)', border: '1px solid rgba(168,85,247,0.1)' }}>
           {dotField.dots.map((d, i) => (
             <motion.div key={i} className="absolute w-2.5 h-2.5 rounded-full"
-              style={{ left: `${d.x}%`, top: `${d.y}%`, background: '#EAB308', boxShadow: '0 0 4px rgba(234,179,8,0.5)' }}
+              style={{ left: `${d.x}%`, top: `${d.y}%`, background: 'radial-gradient(circle, #FDE68A, #EAB308)', boxShadow: '0 0 8px rgba(234,179,8,0.6), 0 0 2px rgba(234,179,8,0.8)' }}
               initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.01 }} />
           ))}
           {/* Vignette */}

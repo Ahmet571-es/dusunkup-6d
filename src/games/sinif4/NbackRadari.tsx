@@ -107,7 +107,7 @@ export default function NbackRadari({ session, state }: { session: SessionManage
         }}>
         {showItem && (
           <motion.div className="w-20 h-20 rounded-full" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }}
-            style={{ background: `radial-gradient(circle at 35% 35%, ${COLORS[sequence[idx]]}, ${COLORS[sequence[idx]]}90)`, boxShadow: `0 0 20px ${COLORS[sequence[idx]]}50` }} />
+            style={{ background: `radial-gradient(circle at 35% 35%, white, ${COLORS[sequence[idx]]}ee, ${COLORS[sequence[idx]]}88)`, boxShadow: `0 0 25px ${COLORS[sequence[idx]]}60, 0 0 50px ${COLORS[sequence[idx]]}20, inset 0 -2px 4px rgba(0,0,0,0.2)` }} />
         )}
         {/* Radar sweep effect */}
         <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">

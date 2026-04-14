@@ -96,7 +96,7 @@ export default function HafizaLabirenti({ session, state }: { session: SessionMa
               style={{
                 background: isActive ? COLORS[colorSeq[idx]] + '30' : 'rgba(255,255,255,0.04)',
                 border: `2px solid ${isActive ? COLORS[colorSeq[idx]] + '60' : 'rgba(255,255,255,0.06)'}`,
-                boxShadow: isActive ? `0 0 20px ${COLORS[colorSeq[idx]]}25` : 'none',
+                boxShadow: isActive ? `0 0 25px ${COLORS[colorSeq[idx]]}35, inset 0 0 15px ${COLORS[colorSeq[idx]]}15` : '0 2px 6px rgba(0,0,0,0.2)',
               }}
               animate={{ scale: isActive ? 1.08 : 1 }}>
               {isActive && <motion.div className="w-8 h-8 rounded-full" style={{ background: COLORS[colorSeq[idx]] }} initial={{ scale: 0 }} animate={{ scale: 1 }} />}

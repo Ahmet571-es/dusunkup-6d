@@ -65,3 +65,109 @@
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
 body { overscroll-behavior: none; }
+
+/* ============================================ */
+/* 🎬 SİNEMATİK GLOBAL STİLLER                */
+/* Tüm 36 oyun bu stillerden faydalanır        */
+/* ============================================ */
+
+/* Oyun panelleri — glassmorphism derinlik */
+.game-panel {
+  background: linear-gradient(145deg, rgba(10,15,30,0.75), rgba(15,20,45,0.5)) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.04) !important;
+  backdrop-filter: blur(12px);
+}
+
+/* Tüm butonlara sinematik hover */
+button:not(:disabled) {
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+button:not(:disabled):hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+button:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+/* Seçenek butonları — cam efekti */
+[class*="rounded-xl"][class*="font-bold"] {
+  backdrop-filter: blur(6px);
+  transition: all 0.2s ease !important;
+}
+
+/* Input alanları — glow focus */
+input:focus {
+  box-shadow: 0 0 0 2px rgba(251,191,36,0.2), 0 0 20px rgba(251,191,36,0.1) !important;
+  border-color: rgba(251,191,36,0.4) !important;
+}
+
+/* Emoji karakterler — hafif glow */
+.text-2xl, .text-3xl, .text-4xl, .text-5xl {
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* SVG görseller — yumuşak gölge */
+svg {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+/* Animasyonlu gradient arka plan sınıfı */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(251,191,36,0.2); }
+  50% { box-shadow: 0 0 20px rgba(251,191,36,0.4); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Doğru cevap kutusu glow */
+.correct-glow {
+  animation: pulseGlow 1s ease-in-out;
+}
+
+/* Yüzen elemanlara yumuşak hareket */
+.float-gentle {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* HUD badge'leri — cam efekti */
+[class*="rounded-lg"][class*="text-xs"][class*="font-bold"] {
+  backdrop-filter: blur(8px);
+}
+
+/* Kart hover efekti (öğretmen paneli + galaksi) */
+[class*="cursor-pointer"][class*="rounded"] {
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+[class*="cursor-pointer"][class*="rounded"]:hover {
+  transform: translateY(-2px);
+}
+
+/* Scrollbar gizle (oyun alanında) */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* Mobil dokunma iyileştirmesi */
+@media (hover: none) {
+  button, [class*="cursor-pointer"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+}

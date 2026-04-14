@@ -78,7 +78,7 @@ export default function DonusumAtolyesi({ session, state }: { session: SessionMa
 
         {/* Conversion */}
         <div className="flex items-center justify-center gap-3">
-          <div className="px-4 py-3 rounded-xl" style={{ background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.15)' }}>
+          <div className="px-4 py-3 rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(249,115,22,0.1), rgba(249,115,22,0.03))', border: '1px solid rgba(249,115,22,0.2)', boxShadow: '0 4px 16px rgba(249,115,22,0.1), inset 0 1px 1px rgba(255,255,255,0.03)' }}>
             <span className="text-2xl font-black text-orange-300">{conv.from}</span>
           </div>
           <motion.span className="text-2xl text-white/30" animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>→</motion.span>

@@ -81,7 +81,7 @@ export default function KodKirici({ session, state }: { session: SessionManager;
         <div className="flex items-center justify-center gap-2 flex-wrap mb-4">
           {puzzle.sequence.map((n, i) => (
             <motion.div key={i} className="w-14 h-14 rounded-xl flex items-center justify-center text-lg font-black text-white"
-              style={{ background: 'rgba(234,179,8,0.06)', border: '1.5px solid rgba(234,179,8,0.15)' }}
+              style={{ background: 'linear-gradient(145deg, rgba(234,179,8,0.08), rgba(234,179,8,0.02))', border: '1.5px solid rgba(234,179,8,0.18)', boxShadow: '0 4px 12px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.05)' }}
               initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
               {n}
             </motion.div>

@@ -18,7 +18,7 @@ function ArrayGrid({ rows, cols, cellSize = 20 }: { rows: number; cols: number; 
         <div key={r} className="flex gap-0.5">
           {Array.from({ length: cols }, (_, c) => (
             <motion.div key={c} className="rounded-sm"
-              style={{ width: cellSize, height: cellSize, background: `hsla(${(r * cols + c) * 17},70%,55%,0.35)`, border: '1px solid rgba(255,255,255,0.1)' }}
+              style={{ width: cellSize, height: cellSize, background: `hsla(${(r * cols + c) * 17},70%,55%,0.35)`, boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.1), 0 1px 3px rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)' }}
               initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: (r * cols + c) * 0.02 }} />
           ))}
         </div>

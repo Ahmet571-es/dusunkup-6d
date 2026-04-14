@@ -13,7 +13,8 @@ function PizzaSVG({ slices, filled, size = 130 }: { slices: number; filled: numb
   const r = size / 2 - 6; const cx = size / 2; const cy = size / 2
   return (
     <svg width={size} height={size}>
-      <circle cx={cx} cy={cy} r={r + 2} fill="rgba(234,88,12,0.08)" stroke="rgba(234,88,12,0.2)" strokeWidth="1" />
+      <defs><filter id="pizzaGlow"><feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#EA580C" floodOpacity="0.2" /></filter></defs>
+      <circle cx={cx} cy={cy} r={r + 2} fill="rgba(234,88,12,0.08)" stroke="rgba(234,88,12,0.25)" strokeWidth="1.5" filter="url(#pizzaGlow)" />
       {Array.from({ length: slices }, (_, i) => {
         const a1 = (i / slices) * Math.PI * 2 - Math.PI / 2
         const a2 = ((i + 1) / slices) * Math.PI * 2 - Math.PI / 2

@@ -160,7 +160,7 @@ export default function CiftGorev({ session, state }: { session: SessionManager;
                 style={{ left: `${d.x}%`, top: `${d.y}%` }}
                 initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.5 }}
                 onClick={() => handleDotTap(d)}>
-                <div className="w-8 h-8 rounded-full" style={{ background: d.color.value, boxShadow: `0 0 10px ${d.color.value}40` }} />
+                <div className="w-8 h-8 rounded-full" style={{ background: `radial-gradient(circle at 35% 35%, ${d.color.value}ee, ${d.color.value}88)`, boxShadow: `0 0 12px ${d.color.value}50, 0 4px 8px rgba(0,0,0,0.3)` }} />
               </motion.div>
             ))}
           </AnimatePresence>

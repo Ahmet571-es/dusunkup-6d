@@ -20,7 +20,7 @@ function StoneButton({ index, active, color, emoji, size = 60, onClick, disabled
       className="rounded-2xl flex flex-col items-center justify-center cursor-pointer select-none"
       style={{
         width: size, height: size,
-        background: active ? color : 'rgba(255,255,255,0.05)',
+        background: active ? `radial-gradient(circle at 40% 35%, ${color}ee, ${color}aa)` : 'rgba(255,255,255,0.05)',
         border: `2.5px solid ${active ? color + '80' : 'rgba(255,255,255,0.1)'}`,
         boxShadow: active ? `0 0 24px ${color}40, inset 0 0 12px rgba(255,255,255,0.1)` : 'none',
         transition: 'all 0.15s',

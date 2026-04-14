@@ -19,7 +19,7 @@ function AnalogClock({ hours, minutes, size = 160 }: { hours: number; minutes: n
   return (
     <svg width={size} height={size}>
       <defs>
-        <filter id="clockShadow"><feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.2" /></filter>
+        <filter id="clockShadow"><feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#60A5FA" floodOpacity="0.15" /><feDropShadow dx="0" dy="4" stdDeviation="8" floodOpacity="0.2" /></filter>
       </defs>
       <circle cx={cx} cy={cy} r={r + 2} fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" strokeWidth="2" filter="url(#clockShadow)" />
       <circle cx={cx} cy={cy} r={r} fill="rgba(6,10,26,0.8)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
