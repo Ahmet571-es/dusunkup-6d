@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { OwlSVG, StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 const PROBLEMS = [
@@ -62,7 +63,10 @@ export default function StratejiLabi({ session, state }: { session: SessionManag
       </div>
 
       <div className="w-full max-w-lg rounded-2xl p-5" style={{ background: 'rgba(10,15,30,0.7)', border: '1px solid rgba(255,255,255,0.06)' }}>
-        <p className="text-sm text-white/80 leading-relaxed mb-3">{problem.text}</p>
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0 mt-1"><OwlSVG size={44} /></div>
+          <p className="text-sm text-white/80 leading-relaxed mb-3">{problem.text}</p>
+        </div>
 
         {/* Keywords phase: highlight important numbers */}
         {(phase === 'keywords' || phase === 'solve' || phase === 'review') && (
@@ -113,7 +117,7 @@ export default function StratejiLabi({ session, state }: { session: SessionManag
       {phase === 'read' && <p className="text-xs text-yellow-300/40 animate-pulse">Dikkatle oku...</p>}
       {phase === 'keywords' && <p className="text-xs text-pink-300/40 animate-pulse">Önemli sayıları bul...</p>}
 
-      <AnimatePresence>{feedback === 'correct' && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>🌟</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback === 'correct' && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><StarSVG size={56} filled glowing /></motion.div>}</AnimatePresence>
     </div>
   )
 }

@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { FlowerSVG, StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type FracMode = 'identify' | 'compare' | 'equivalent' | 'add'
@@ -188,7 +189,7 @@ export default function KesirMutfagi({ session, state }: { session: SessionManag
         ))}
       </div>
 
-      <AnimatePresence>{feedback && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>{feedback === 'correct' ? '🌟' : '💫'}</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><div className="flex justify-center">{feedback === 'correct' ? <StarSVG size={56} filled glowing /> : <span className="text-5xl">💫</span>}</div></motion.div>}</AnimatePresence>
     </div>
   )
 }

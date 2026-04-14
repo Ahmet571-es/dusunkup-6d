@@ -5,33 +5,44 @@
  */
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type RhythmMode = 'forward' | 'growing' | 'reverse' | 'dual'
 
 const STONE_COLORS = ['#EF4444', '#3B82F6', '#22C55E', '#EAB308', '#A855F7', '#EC4899', '#F97316']
-const STONE_EMOJIS = ['🔴', '🔵', '🟢', '🟡', '🟣', '💗', '🟠']
 
-function StoneButton({ index, active, color, emoji, size = 60, onClick, disabled }: {
-  index: number; active: boolean; color: string; emoji: string; size?: number; onClick: () => void; disabled: boolean
+function StoneSVG({ color, size = 48, active }: { color: string; size?: number; active: boolean }) {
+  const id = color.replace('#','')
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48">
+      <defs>
+        <radialGradient id={`st_${id}`} cx="38%" cy="32%">
+          <stop offset="0%" stopColor="white" stopOpacity={active ? 0.4 : 0.15} />
+          <stop offset="50%" stopColor={color} stopOpacity={active ? 0.95 : 0.3} />
+          <stop offset="100%" stopColor={color} stopOpacity={active ? 0.7 : 0.15} />
+        </radialGradient>
+        <filter id={`stg_${id}`}><feDropShadow dx="0" dy="0" stdDeviation={active ? 4 : 1} floodColor={color} floodOpacity={active ? 0.5 : 0.1} /></filter>
+      </defs>
+      <circle cx="24" cy="24" r="20" fill={`url(#st_${id})`} stroke={color} strokeWidth={active ? 2 : 1} strokeOpacity={active ? 0.8 : 0.3} filter={`url(#stg_${id})`} />
+      <ellipse cx="19" cy="17" rx="6" ry="4" fill="white" opacity={active ? 0.2 : 0.05} transform="rotate(-15 19 17)" />
+    </svg>
+  )
+}
+
+function StoneButton({ index, active, color, size = 60, onClick, disabled }: {
+  index: number; active: boolean; color: string; size?: number; onClick: () => void; disabled: boolean
 }) {
   return (
     <motion.div
       className="rounded-2xl flex flex-col items-center justify-center cursor-pointer select-none"
-      style={{
-        width: size, height: size,
-        background: active ? `radial-gradient(circle at 40% 35%, ${color}ee, ${color}aa)` : 'rgba(255,255,255,0.05)',
-        border: `2.5px solid ${active ? color + '80' : 'rgba(255,255,255,0.1)'}`,
-        boxShadow: active ? `0 0 24px ${color}40, inset 0 0 12px rgba(255,255,255,0.1)` : 'none',
-        transition: 'all 0.15s',
-        opacity: disabled ? 0.4 : 1,
-      }}
-      whileHover={!disabled ? { scale: 1.08, borderColor: color + '50' } : {}}
+      style={{ width: size, height: size, opacity: disabled ? 0.4 : 1 }}
+      whileHover={!disabled ? { scale: 1.08 } : {}}
       whileTap={!disabled ? { scale: 0.9 } : {}}
       animate={{ scale: active ? 1.12 : 1 }}
       onClick={() => !disabled && onClick()}>
-      <span className="text-lg">{active ? emoji : ''}</span>
-      {!active && <span className="text-xs font-bold text-white/25">{index + 1}</span>}
+      <StoneSVG color={color} size={size - 8} active={active} />
+      {!active && <span className="text-[9px] font-bold text-white/20 -mt-1">{index + 1}</span>}
     </motion.div>
   )
 }
@@ -185,7 +196,7 @@ export default function RitimNehri({ session, state }: { session: SessionManager
         <div className="flex gap-2 justify-center relative z-10">
           {Array.from({ length: stoneCount }, (_, i) => (
             <StoneButton key={i} index={i} active={activeStone === i}
-              color={STONE_COLORS[i]} emoji={STONE_EMOJIS[i]} size={52}
+              color={STONE_COLORS[i]} size={52}
               onClick={() => handleStoneTap(i)} disabled={isShowing || !!feedback} />
           ))}
         </div>
@@ -222,7 +233,7 @@ export default function RitimNehri({ session, state }: { session: SessionManager
       <AnimatePresence>
         {feedback && (
           <motion.div className="text-center" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>
-            <span className="text-5xl">{feedback === 'correct' ? '🌟' : '💫'}</span>
+            <div className="flex justify-center">{feedback === 'correct' ? <StarSVG size={56} filled glowing /> : <span className="text-5xl">💫</span>}</div>
             <p className={`text-sm font-bold mt-1 ${feedback === 'correct' ? 'text-green-300' : 'text-orange-300'}`}>
               {feedback === 'correct' ? (streak >= 3 ? `${streak} seri! 🔥` : 'Harika!') : `Tekrar dene! Hafıza: ${spanLength}`}
             </p>

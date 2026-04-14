@@ -4,6 +4,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 export default function SayiYolu({ session, state }: { session: SessionManager; state: SessionState }) {
@@ -95,9 +96,9 @@ export default function SayiYolu({ session, state }: { session: SessionManager; 
             <motion.div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2"
               style={{ left: `${position * 100}%` }}
               initial={{ scale: 0 }} animate={{ scale: 1 }}>
-              <div className="w-6 h-6 rounded-full border-2 border-yellow-400 flex items-center justify-center"
-                style={{ background: 'rgba(251,191,36,0.2)', boxShadow: '0 0 12px rgba(251,191,36,0.3)' }}>
-                <span className="text-[10px] font-black text-yellow-300">{Math.round(position * maxNum)}</span>
+              <div className="relative flex flex-col items-center">
+                <StarSVG size={28} filled glowing />
+                <span className="text-[10px] font-black text-yellow-300 -mt-0.5">{Math.round(position * maxNum)}</span>
               </div>
             </motion.div>
           )}
@@ -126,10 +127,10 @@ export default function SayiYolu({ session, state }: { session: SessionManager; 
       </motion.button>
 
       {feedback && (
-        <motion.p className={`text-sm font-bold ${feedback === 'correct' ? 'text-green-300' : feedback === 'close' ? 'text-yellow-300' : 'text-orange-300'}`}
+        <motion.div className={`flex items-center gap-2 text-sm font-bold ${feedback === 'correct' ? 'text-green-300' : feedback === 'close' ? 'text-yellow-300' : 'text-orange-300'}`}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          {feedback === 'correct' ? '🌟 Mükemmel!' : feedback === 'close' ? '👍 Yaklaştın!' : `💫 Doğru yer: ${target}`}
-        </motion.p>
+          {feedback === 'correct' ? <><StarSVG size={28} filled glowing /><span>Mükemmel!</span></> : feedback === 'close' ? '👍 Yaklaştın!' : `💫 Doğru yer: ${target}`}
+        </motion.div>
       )}
     </div>
   )

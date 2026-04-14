@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type StroopMode = 'color_word' | 'number_quantity' | 'size_value' | 'mixed'
@@ -117,7 +118,7 @@ export default function StroopSavascisi({ session, state }: { session: SessionMa
         )}
       </div>
 
-      <AnimatePresence>{feedback && <motion.span className="text-4xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>{feedback === 'correct' ? '✨' : '💨'}</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>{feedback === 'correct' ? <StarSVG size={48} filled glowing /> : <span className="text-4xl">💨</span>}</motion.div>}</AnimatePresence>
     </div>
   )
 }

@@ -4,7 +4,39 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
+
+function BatSVG({ size = 24 }: { size?: number }) {
+  return (
+    <svg width={size} height={size * 0.7} viewBox="0 0 36 24">
+      <defs>
+        <radialGradient id="batG" cx="50%" cy="40%">
+          <stop offset="0%" stopColor="#6B21A8" /><stop offset="100%" stopColor="#1E1033" />
+        </radialGradient>
+      </defs>
+      <path d="M2,8 Q6,2 12,6 Q14,4 18,8 Q22,4 24,6 Q30,2 34,8 Q30,14 24,12 Q22,16 18,14 Q14,16 12,12 Q6,14 2,8Z" fill="url(#batG)" opacity="0.9" />
+      <circle cx="14" cy="9" r="1.5" fill="#F59E0B" /><circle cx="22" cy="9" r="1.5" fill="#F59E0B" />
+      <circle cx="14" cy="8.5" r="0.6" fill="white" opacity="0.7" /><circle cx="22" cy="8.5" r="0.6" fill="white" opacity="0.7" />
+    </svg>
+  )
+}
+
+function CrystalSVG({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size * 1.3} viewBox="0 0 20 26">
+      <defs>
+        <linearGradient id="cryG" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#A5F3FC" /><stop offset="50%" stopColor="#22D3EE" /><stop offset="100%" stopColor="#0891B2" />
+        </linearGradient>
+        <filter id="cryGl"><feDropShadow dx="0" dy="0" stdDeviation="2" floodColor="#22D3EE" floodOpacity="0.5" /></filter>
+      </defs>
+      <path d="M10,1 L17,10 L14,25 L6,25 L3,10 Z" fill="url(#cryG)" stroke="#06B6D4" strokeWidth="0.5" filter="url(#cryGl)" />
+      <path d="M10,3 L14,10 L10,8 Z" fill="white" opacity="0.25" />
+      <path d="M8,12 L6,22" stroke="white" strokeWidth="0.4" opacity="0.15" />
+    </svg>
+  )
+}
 
 type SubMode = 'take_away' | 'difference' | 'missing_addend'
 
@@ -64,17 +96,17 @@ export default function CikarmaMagarasi({ session, state }: { session: SessionMa
         {problem.mode === 'take_away' && (
           <div className="flex justify-center gap-1 mb-3 flex-wrap">
             {Array.from({ length: problem.a }, (_, i) => (
-              <motion.span key={i} className="text-xl" initial={{ opacity: 1 }}
+              <motion.div key={i} initial={{ opacity: 1 }}
                 animate={{ opacity: i >= problem.a - problem.b ? 0.2 : 1, y: i >= problem.a - problem.b ? -10 : 0 }}
-                transition={{ delay: i * 0.05 }}>🦇</motion.span>
+                transition={{ delay: i * 0.05 }}><BatSVG size={26} /></motion.div>
             ))}
           </div>
         )}
         {problem.mode === 'difference' && (
           <div className="flex justify-center gap-6 mb-3">
-            <div className="flex gap-0.5">{Array.from({length: problem.a}, (_, i) => <span key={i} className="text-lg">💎</span>)}</div>
+            <div className="flex gap-0.5">{Array.from({length: problem.a}, (_, i) => <span key={i}><CrystalSVG size={18} /></span>)}</div>
             <span className="text-white/30 text-xl">vs</span>
-            <div className="flex gap-0.5">{Array.from({length: problem.b}, (_, i) => <span key={i} className="text-lg">💎</span>)}</div>
+            <div className="flex gap-0.5">{Array.from({length: problem.b}, (_, i) => <span key={i}><CrystalSVG size={18} /></span>)}</div>
           </div>
         )}
 
@@ -121,7 +153,7 @@ export default function CikarmaMagarasi({ session, state }: { session: SessionMa
 
       <AnimatePresence>
         {feedback && <motion.div initial={{scale:0}} animate={{scale:1}} exit={{opacity:0}}>
-          <span className="text-5xl">{feedback==='correct'?'🌟':'💫'}</span>
+          <div className="flex justify-center">{feedback==='correct'?<StarSVG size={56} filled glowing />:<span className="text-5xl">💫</span>}</div>
         </motion.div>}
       </AnimatePresence>
     </div>

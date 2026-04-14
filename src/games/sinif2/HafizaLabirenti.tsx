@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG, FlowerSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 const COLORS = ['#EF4444', '#3B82F6', '#22C55E', '#EAB308', '#A855F7', '#EC4899']
@@ -99,7 +100,7 @@ export default function HafizaLabirenti({ session, state }: { session: SessionMa
                 boxShadow: isActive ? `0 0 25px ${COLORS[colorSeq[idx]]}35, inset 0 0 15px ${COLORS[colorSeq[idx]]}15` : '0 2px 6px rgba(0,0,0,0.2)',
               }}
               animate={{ scale: isActive ? 1.08 : 1 }}>
-              {isActive && <motion.div className="w-8 h-8 rounded-full" style={{ background: COLORS[colorSeq[idx]] }} initial={{ scale: 0 }} animate={{ scale: 1 }} />}
+              {isActive && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}><FlowerSVG color={COLORS[colorSeq[idx]]} size={32} blooming /></motion.div>}
             </motion.div>
           )
         })}
@@ -114,7 +115,7 @@ export default function HafizaLabirenti({ session, state }: { session: SessionMa
         </div>
       )}
 
-      <AnimatePresence>{feedback && <motion.span className="text-4xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>{feedback === 'correct' ? '✨' : '💨'}</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>{feedback === 'correct' ? <StarSVG size={48} filled glowing /> : <span className="text-4xl">💨</span>}</motion.div>}</AnimatePresence>
     </div>
   )
 }

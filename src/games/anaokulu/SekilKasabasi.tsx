@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type ShapeMode = 'find' | 'name' | 'classify' | 'build'
@@ -150,7 +151,7 @@ export default function SekilKasabasi({ session, state }: { session: SessionMana
       )}
 
       {feedback === 'wrong' && <p className="text-xs text-orange-300">Bu bir {target.name} ({target.sides === 0 ? 'yuvarlak' : `${target.sides} kenar`})</p>}
-      <AnimatePresence>{feedback === 'correct' && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>🌟</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback === 'correct' && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><StarSVG size={56} filled glowing /></motion.div>}</AnimatePresence>
     </div>
   )
 }

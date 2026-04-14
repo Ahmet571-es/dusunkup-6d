@@ -4,6 +4,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 const SHAPES = ['🔴','🔵','🟡','🟢','🟣','🟠']
@@ -88,9 +89,13 @@ export default function OruntuGok({ session, state }: { session: SessionManager;
 
   return (
     <div className="flex flex-col items-center justify-center h-full p-3 gap-4">
-      <span className="text-xs font-bold px-3 py-1 rounded-lg" style={{ background: 'rgba(168,85,247,0.1)', color: '#D8B4FE', border: '1px solid rgba(168,85,247,0.15)' }}>
-        ✨ Sıradaki ne?
-      </span>
+      <div className="flex items-center gap-2">
+        <StarSVG size={20} filled glowing />
+        <span className="text-xs font-bold px-3 py-1 rounded-lg" style={{ background: 'rgba(168,85,247,0.1)', color: '#D8B4FE', border: '1px solid rgba(168,85,247,0.15)' }}>
+          Sıradaki ne?
+        </span>
+        <StarSVG size={20} filled glowing />
+      </div>
 
       {/* Pattern display */}
       <div className="w-full max-w-lg rounded-2xl p-6"
@@ -138,7 +143,7 @@ export default function OruntuGok({ session, state }: { session: SessionManager;
       <AnimatePresence>
         {feedback && (
           <motion.div className="text-center" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>
-            <span className="text-5xl">{feedback === 'correct' ? '🌟' : '💫'}</span>
+            <div className="flex justify-center">{feedback === 'correct' ? <StarSVG size={56} filled glowing /> : <span className="text-5xl">💫</span>}</div>
           </motion.div>
         )}
       </AnimatePresence>

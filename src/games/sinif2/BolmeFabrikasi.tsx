@@ -4,7 +4,23 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
+
+function AppleSVG({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 22">
+      <defs>
+        <radialGradient id="apG" cx="38%" cy="30%">
+          <stop offset="0%" stopColor="#FCA5A5" /><stop offset="60%" stopColor="#EF4444" /><stop offset="100%" stopColor="#B91C1C" />
+        </radialGradient>
+      </defs>
+      <path d="M10,4 Q6,3 4,6 Q1,10 3,15 Q5,20 10,21 Q15,20 17,15 Q19,10 16,6 Q14,3 10,4Z" fill="url(#apG)" />
+      <path d="M10,4 Q9,1 11,0 Q12,1 11,3" fill="#16A34A" stroke="#15803D" strokeWidth="0.3" />
+      <ellipse cx="7" cy="8" rx="2.5" ry="3" fill="white" opacity="0.15" transform="rotate(-10 7 8)" />
+    </svg>
+  )
+}
 
 type DivMode = 'partitive' | 'quotitive' | 'remainder' | 'inverse'
 
@@ -82,7 +98,7 @@ export default function BolmeFabrikasi({ session, state }: { session: SessionMan
           <div className="mb-3">
             <div className="flex justify-center gap-1 mb-2 flex-wrap">
               {Array.from({ length: Math.min(problem.a, 24) }, (_, i) => (
-                <motion.span key={i} className="text-base" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }}>🍎</motion.span>
+                <motion.span key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }}><AppleSVG size={20} /></motion.span>
               ))}
               {problem.a > 24 && <span className="text-xs text-white/30">+{problem.a - 24}</span>}
             </div>
@@ -100,7 +116,7 @@ export default function BolmeFabrikasi({ session, state }: { session: SessionMan
             {Array.from({ length: Math.min(Math.ceil(problem.a / problem.b), 10) }, (_, g) => (
               <motion.div key={g} className="flex gap-0.5 px-2 py-1 rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.04))', border: '1px solid rgba(16,185,129,0.15)', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}
                 initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: g * 0.1 }}>
-                {Array.from({ length: problem.b }, (_, i) => <span key={i} className="text-sm">🍎</span>)}
+                {Array.from({ length: problem.b }, (_, i) => <span key={i}><AppleSVG size={16} /></span>)}
               </motion.div>
             ))}
           </div>
@@ -153,7 +169,7 @@ export default function BolmeFabrikasi({ session, state }: { session: SessionMan
       </div>
 
       {feedback === 'wrong' && <span className="text-xs text-orange-300">Doğru: {problem.answer}{problem.mode === 'remainder' ? ` kalan ${problem.remainder}` : ''}</span>}
-      <AnimatePresence>{feedback === 'correct' && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>🌟</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback === 'correct' && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><StarSVG size={56} filled glowing /></motion.div>}</AnimatePresence>
     </div>
   )
 }

@@ -4,6 +4,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { OwlSVG, StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 interface Story { text: string; question: string; answer: number; numbers: number[] }
@@ -66,7 +67,10 @@ export default function HikayeKopugu({ session, state }: { session: SessionManag
         <AnimatePresence mode="wait">
           {phase === 'story' ? (
             <motion.div key="story" className="text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <p className="text-lg text-white/80 leading-relaxed mb-4">{story.text}</p>
+              <div className="flex items-start gap-3 justify-center mb-3">
+                <div className="flex-shrink-0"><OwlSVG size={52} /></div>
+                <p className="text-lg text-white/80 leading-relaxed text-left">{story.text}</p>
+              </div>
               <div className="flex items-center justify-center gap-1">
                 {[0,1,2].map(i => (
                   <motion.span key={i} className="w-2 h-2 rounded-full bg-yellow-400"
@@ -104,9 +108,9 @@ export default function HikayeKopugu({ session, state }: { session: SessionManag
               style={{ background: 'rgba(52,211,153,0.12)', color: '#6EE7B7' }} onClick={handleSubmit}>Gönder ✓</motion.button>
           </div>
           <AnimatePresence>
-            {feedback && <motion.span className="text-5xl" initial={{scale:0}} animate={{scale:1}} exit={{opacity:0}}>
-              {feedback==='correct'?'🌟':'💫'}
-            </motion.span>}
+            {feedback && <motion.div initial={{scale:0}} animate={{scale:1}} exit={{opacity:0}}>
+              <div className="flex justify-center">{feedback==='correct'?<StarSVG size={56} filled glowing />:<span className="text-5xl">💫</span>}</div>
+            </motion.div>}
           </AnimatePresence>
         </>
       )}

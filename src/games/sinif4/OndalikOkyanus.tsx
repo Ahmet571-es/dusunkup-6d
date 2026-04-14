@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { FishSVG, StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type DecMode = 'convert' | 'place_value' | 'compare' | 'add' | 'number_line'
@@ -181,7 +182,7 @@ export default function OndalikOkyanus({ session, state }: { session: SessionMan
       </div>
 
       {feedback === 'wrong' && <p className="text-xs text-orange-300">Doğru: {correctAnswer}</p>}
-      <AnimatePresence>{feedback === 'correct' && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>🌟</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback === 'correct' && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><StarSVG size={56} filled glowing /></motion.div>}</AnimatePresence>
     </div>
   )
 }

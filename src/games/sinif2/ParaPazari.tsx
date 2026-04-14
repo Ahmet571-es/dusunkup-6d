@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type ParaMode = 'count_coins' | 'total' | 'change' | 'budget' | 'compare'
@@ -33,11 +34,21 @@ const COINS = [
 ]
 
 function CoinSVG({ coin, size = 28 }: { coin: typeof COINS[0]; size?: number }) {
+  const id = coin.color.replace('#','')
   return (
     <svg width={size} height={size} viewBox="0 0 30 30">
-      <circle cx="15" cy="15" r="13" fill={coin.color + '30'} stroke={coin.color} strokeWidth="2"><animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" /></circle>
-      <circle cx="15" cy="15" r="9" fill="none" stroke={coin.color + '40'} strokeWidth="0.5" />
-      <text x="15" y="18" textAnchor="middle" fill={coin.color} fontSize="9" fontWeight="bold">{coin.value}</text>
+      <defs>
+        <radialGradient id={`cg_${id}`} cx="38%" cy="32%">
+          <stop offset="0%" stopColor="white" stopOpacity="0.5" />
+          <stop offset="40%" stopColor={coin.color} stopOpacity="0.85" />
+          <stop offset="100%" stopColor={coin.color} stopOpacity="0.5" />
+        </radialGradient>
+        <filter id={`cgw_${id}`}><feDropShadow dx="0" dy="1" stdDeviation="2" floodColor={coin.color} floodOpacity="0.45" /></filter>
+      </defs>
+      <circle cx="15" cy="15" r="13" fill={`url(#cg_${id})`} stroke={coin.color} strokeWidth="1.5" strokeOpacity="0.6" filter={`url(#cgw_${id})`} />
+      <circle cx="15" cy="15" r="9.5" fill="none" stroke="white" strokeWidth="0.4" opacity="0.15" />
+      <ellipse cx="11" cy="10" rx="4" ry="3" fill="white" opacity="0.15" transform="rotate(-15 11 10)" />
+      <text x="15" y="18" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold" opacity="0.9">{coin.value}</text>
     </svg>
   )
 }
@@ -214,7 +225,7 @@ export default function ParaPazari({ session, state }: { session: SessionManager
       </div>
 
       {feedback === 'wrong' && <span className="text-xs text-orange-300">Doğru cevap: {answer} TL</span>}
-      <AnimatePresence>{feedback === 'correct' && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>🌟</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback === 'correct' && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><StarSVG size={56} filled glowing /></motion.div>}</AnimatePresence>
     </div>
   )
 }

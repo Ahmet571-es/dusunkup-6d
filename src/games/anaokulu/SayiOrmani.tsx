@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { SquirrelSVG as CinemaSquirrel } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 // === TYPES ===
@@ -33,35 +34,7 @@ interface Question {
 }
 
 // === ANIMAL SVGs ===
-function SquirrelSVG({ size = 42, variant = 0 }: { size?: number; variant?: number }) {
-  const colors = [
-    { body: '#C2710C', belly: '#FCEDC2', dark: '#9A5A08' },
-    { body: '#D4820E', belly: '#FEF3D6', dark: '#A86808' },
-    { body: '#8B5E0C', belly: '#F5E0B0', dark: '#6B4808' },
-  ]
-  const c = colors[variant % 3]
-  return (
-    <svg width={size} height={size} viewBox="0 0 80 80">
-      <ellipse cx="40" cy="72" rx="16" ry="3" fill="rgba(0,0,0,0.15)"/>
-      <path d="M52 42C60 32 68 26 65 16C62 6 52 10 50 18C48 26 50 34 48 38" fill={c.dark}/>
-      <ellipse cx="38" cy="46" rx="16" ry="18" fill={c.body}/>
-      <ellipse cx="38" cy="50" rx="10" ry="12" fill={c.belly}/>
-      <circle cx="38" cy="28" r="14" fill={c.body}/>
-      <path d="M26 16C24 10 26 4 30 7C34 9 32 16 30 18" fill={c.body}/>
-      <path d="M50 16C52 10 50 4 46 7C42 9 44 16 46 18" fill={c.body}/>
-      <ellipse cx="32" cy="26" rx="4" ry="4.5" fill="white"/>
-      <ellipse cx="44" cy="26" rx="4" ry="4.5" fill="white"/>
-      <circle cx="33" cy="25.5" r="2.5" fill="#1A1207"/>
-      <circle cx="45" cy="25.5" r="2.5" fill="#1A1207"/>
-      <circle cx="33.8" cy="24.5" r="1" fill="white"/>
-      <circle cx="45.8" cy="24.5" r="1" fill="white"/>
-      <ellipse cx="38" cy="32" rx="2.5" ry="1.8" fill="#5C3A0A"/>
-      <path d="M35 33.5C36.5 35.5 39.5 35.5 41 33.5" stroke="#5C3A0A" strokeWidth="0.8" fill="none"/>
-      <circle cx="27" cy="29" rx="3" ry="2.5" fill="#F7C97E" opacity="0.4"/>
-      <circle cx="49" cy="29" rx="3" ry="2.5" fill="#F7C97E" opacity="0.4"/>
-    </svg>
-  )
-}
+// SquirrelSVG imported from cinema/characters (CinemaSquirrel)
 
 function RabbitSVG({ size = 38 }: { size?: number }) {
   return (
@@ -218,7 +191,7 @@ function generateQuestion(module: Module, difficulty: Record<string, number>): Q
 // === RENDER ANIMAL ===
 function AnimalSprite({ animal, variant, size }: { animal: string; variant: number; size: number }) {
   switch (animal) {
-    case 'squirrel': return <SquirrelSVG size={size} variant={variant} />
+    case 'squirrel': return <CinemaSquirrel size={size} />
     case 'rabbit': return <RabbitSVG size={size} />
     case 'hedgehog': return <HedgehogSVG size={size} />
     case 'butterfly': return <ButterflySVG size={size} />
@@ -462,7 +435,7 @@ export default function SayiOrmani({ session, state }: { session: SessionManager
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
                 className="text-center">
-                <span className="text-7xl block">{feedback === 'correct' ? '🌟' : '💫'}</span>
+                <div className="flex justify-center">{feedback === 'correct' ? <CinemaSquirrel size={70} happy /> : <span className="text-7xl block">💫</span>}</div>
                 <p className={`text-lg font-bold mt-2 ${feedback === 'correct' ? 'text-green-300' : 'text-orange-300'}`}>
                   {feedback === 'correct' ? 'Harika!' : `Tekrar dene! Cevap: ${question.answer}`}
                 </p>

@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type GeoMode = 'name' | 'sides' | 'rotation' | 'angles'
@@ -105,7 +106,7 @@ export default function GeometriKenti({ session, state }: { session: SessionMana
       </div>
 
       {feedback === 'wrong' && <p className="text-xs text-orange-300">Doğru: {shape.name} ({shape.sides} kenar, {shape.angles} köşe)</p>}
-      <AnimatePresence>{feedback === 'correct' && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>🌟</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback === 'correct' && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><StarSVG size={56} filled glowing /></motion.div>}</AnimatePresence>
     </div>
   )
 }

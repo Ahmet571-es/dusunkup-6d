@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { FlowerSVG, StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type MultMode = 'repeated_add' | 'array' | 'word_problem' | 'speed'
@@ -114,7 +115,7 @@ export default function CarpimBahcesi({ session, state }: { session: SessionMana
                 <motion.div key={g} className="flex gap-0.5 px-2 py-1.5 rounded-lg"
                   style={{ background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.12)' }}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: g * 0.08 }}>
-                  {Array.from({ length: problem.b }, (_, i) => <span key={i} className="text-base">🌻</span>)}
+                  {Array.from({ length: problem.b }, (_, i) => <span key={i}><FlowerSVG color="#EAB308" size={22} /></span>)}
                 </motion.div>
               ))}
             </div>
@@ -172,7 +173,7 @@ export default function CarpimBahcesi({ session, state }: { session: SessionMana
         <motion.button disabled={!!feedback || !input} className="w-16 h-12 rounded-xl text-xs font-bold disabled:opacity-30" style={{ background: 'rgba(52,211,153,0.12)', color: '#6EE7B7' }} onClick={handleSubmit}>Gönder ✓</motion.button>
       </div>
 
-      <AnimatePresence>{feedback && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>{feedback === 'correct' ? '🌟' : '💫'}</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><div className="flex justify-center">{feedback === 'correct' ? <StarSVG size={56} filled glowing /> : <span className="text-5xl">💫</span>}</div></motion.div>}</AnimatePresence>
     </div>
   )
 }

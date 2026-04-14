@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 const PROBLEMS = [
@@ -99,7 +100,7 @@ export default function MuhendisIstasyonu({ session, state }: { session: Session
       {phase === 'read' && <p className="text-xs text-yellow-300/40 animate-pulse">📖 Problemi dikkatle oku...</p>}
       {phase === 'plan' && <p className="text-xs text-red-300/40 animate-pulse">📌 Önemli bilgileri tespit et...</p>}
 
-      <AnimatePresence>{feedback === 'correct' && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>🌟</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback === 'correct' && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><StarSVG size={56} filled glowing /></motion.div>}</AnimatePresence>
     </div>
   )
 }

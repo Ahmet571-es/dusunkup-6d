@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { BalloonSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 interface Balloon {
@@ -29,26 +30,7 @@ const COLORS = [
   { name: 'Turuncu', value: '#F97316', light: '#FDBA74' },
 ]
 
-function BalloonSVG({ color, light, size = 52 }: { color: string; light: string; size?: number }) {
-  const id = color.replace('#','')
-  return (
-    <svg width={size} height={size * 1.4} viewBox="0 0 50 70">
-      <defs>
-        <radialGradient id={`bg${id}`} cx="35%" cy="28%">
-          <stop offset="0%" stopColor="white" stopOpacity="0.35" />
-          <stop offset="30%" stopColor={light} />
-          <stop offset="100%" stopColor={color} />
-        </radialGradient>
-        <filter id={`sh${id}`}><feDropShadow dx="0" dy="3" stdDeviation="4" floodColor={color} floodOpacity="0.35" /></filter>
-      </defs>
-      <ellipse cx="25" cy="26" rx="22" ry="26" fill={`url(#bg${id})`} filter={`url(#sh${id})`} />
-      <ellipse cx="17" cy="16" rx="7" ry="11" fill="white" opacity="0.22" transform="rotate(-18 17 16)" />
-      <ellipse cx="14" cy="13" rx="3" ry="5" fill="white" opacity="0.18" transform="rotate(-18 14 13)" />
-      <path d="M22,50 L25,56 L28,50" fill={color} opacity="0.9" />
-      <path d="M25,56 Q23,61 26,64 Q24,67 25,70" fill="none" stroke={color} strokeWidth="0.8" opacity="0.4" strokeLinecap="round" />
-    </svg>
-  )
-}
+// BalloonSVG imported from cinema/characters
 
 export default function RenkAdasi({ session, state }: { session: SessionManager; state: SessionState }) {
   const [balloons, setBalloons] = useState<Balloon[]>([])
@@ -202,7 +184,7 @@ export default function RenkAdasi({ session, state }: { session: SessionManager;
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.8 }}
             >
-              <BalloonSVG color={b.color} light={COLORS.find(c => c.value === b.color)?.light || b.color} size={44} />
+              <BalloonSVG color={b.color} size={44} />
             </motion.div>
           ))}
         </AnimatePresence>

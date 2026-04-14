@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { TreeSVG, StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 const BAR_COLORS = ['#3B82F6', '#22C55E', '#EAB308', '#A855F7', '#EF4444', '#EC4899']
@@ -135,7 +136,7 @@ export default function VeriGolu({ session, state }: { session: SessionManager; 
       </div>
 
       {feedback === 'wrong' && <p className="text-xs text-orange-300">Doğru cevap: {data.answer}</p>}
-      <AnimatePresence>{feedback === 'correct' && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>🌟</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback === 'correct' && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><StarSVG size={56} filled glowing /></motion.div>}</AnimatePresence>
     </div>
   )
 }

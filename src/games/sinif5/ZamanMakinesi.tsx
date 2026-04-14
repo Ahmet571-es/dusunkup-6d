@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 const PROBLEMS = [
@@ -150,7 +151,7 @@ export default function ZamanMakinesi({ session, state }: { session: SessionMana
       </div>
 
       {feedback === 'wrong' && phase === 'solve' && <p className="text-xs text-orange-300">Tekrar dene! ({attempts + 1}. deneme)</p>}
-      <AnimatePresence>{feedback === 'correct' && phase === 'solve' && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>🌟</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback === 'correct' && phase === 'solve' && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><StarSVG size={56} filled glowing /></motion.div>}</AnimatePresence>
     </div>
   )
 }

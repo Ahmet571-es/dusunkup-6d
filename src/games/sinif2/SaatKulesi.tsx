@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type ClockMode = 'read_full' | 'read_half' | 'read_minute' | 'duration'
@@ -19,10 +20,16 @@ function AnalogClock({ hours, minutes, size = 160 }: { hours: number; minutes: n
   return (
     <svg width={size} height={size}>
       <defs>
-        <filter id="clockShadow"><feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#60A5FA" floodOpacity="0.15" /><feDropShadow dx="0" dy="4" stdDeviation="8" floodOpacity="0.2" /></filter>
+        <radialGradient id="clockFace" cx="45%" cy="40%">
+          <stop offset="0%" stopColor="#1E293B" /><stop offset="80%" stopColor="#0F172A" /><stop offset="100%" stopColor="#060A1A" />
+        </radialGradient>
+        <filter id="clockShadow"><feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#60A5FA" floodOpacity="0.2" /><feDropShadow dx="0" dy="4" stdDeviation="8" floodOpacity="0.2" /></filter>
+        <filter id="clockGlow"><feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#60A5FA" floodOpacity="0.3" /></filter>
       </defs>
-      <circle cx={cx} cy={cy} r={r + 2} fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" strokeWidth="2" filter="url(#clockShadow)" />
-      <circle cx={cx} cy={cy} r={r} fill="rgba(6,10,26,0.8)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+      <circle cx={cx} cy={cy} r={r + 2} fill="rgba(255,255,255,0.03)" stroke="rgba(96,165,250,0.2)" strokeWidth="2" filter="url(#clockShadow)" />
+      <circle cx={cx} cy={cy} r={r} fill="url(#clockFace)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+      {/* 12 o'clock star marker */}
+      <circle cx={cx} cy={cy - r + 3} r="3" fill="#FBBF24" opacity="0.3" />
       {/* Hour numbers */}
       {Array.from({ length: 12 }, (_, i) => {
         const a = (i + 1) * 30 * Math.PI / 180
@@ -34,7 +41,7 @@ function AnalogClock({ hours, minutes, size = 160 }: { hours: number; minutes: n
         return <line key={i} x1={cx + Math.sin(a) * (r - 6)} y1={cy - Math.cos(a) * (r - 6)} x2={cx + Math.sin(a) * (r - 6 - len)} y2={cy - Math.cos(a) * (r - 6 - len)} stroke={`rgba(255,255,255,${i % 5 === 0 ? 0.25 : 0.1})`} strokeWidth={i % 5 === 0 ? 1.5 : 0.5} />
       })}
       {/* Hour hand */}
-      <line x1={cx} y1={cy} x2={cx + Math.cos(hRad) * hLen} y2={cy + Math.sin(hRad) * hLen} stroke="#60A5FA" strokeWidth="4" strokeLinecap="round" />
+      <line x1={cx} y1={cy} x2={cx + Math.cos(hRad) * hLen} y2={cy + Math.sin(hRad) * hLen} stroke="#60A5FA" strokeWidth="4" strokeLinecap="round" filter="url(#clockGlow)" />
       {/* Minute hand */}
       <line x1={cx} y1={cy} x2={cx + Math.cos(mRad) * mLen} y2={cy + Math.sin(mRad) * mLen} stroke="#34D399" strokeWidth="2.5" strokeLinecap="round" />
       {/* Center dot */}
@@ -99,7 +106,7 @@ export default function SaatKulesi({ session, state }: { session: SessionManager
       <div className="flex gap-3 text-[10px] text-white/20">
         <span>🔵 Kısa kol = Saat</span><span>🟢 Uzun kol = Dakika</span>
       </div>
-      <AnimatePresence>{feedback && <motion.span className="text-5xl" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>{feedback === 'correct' ? '🌟' : '💫'}</motion.span>}</AnimatePresence>
+      <AnimatePresence>{feedback && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}><div className="flex justify-center">{feedback === 'correct' ? <StarSVG size={56} filled glowing /> : <span className="text-5xl">💫</span>}</div></motion.div>}</AnimatePresence>
     </div>
   )
 }

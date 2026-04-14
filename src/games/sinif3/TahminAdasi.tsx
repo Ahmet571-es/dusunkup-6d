@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type EstMode = 'dots' | 'calculation' | 'measurement' | 'hypothesis'
@@ -139,9 +140,9 @@ export default function TahminAdasi({ session, state }: { session: SessionManage
               </span>
             </div>
           </div>
-          <p className={`text-sm font-bold mt-2 ${feedback === 'correct' ? 'text-green-300' : feedback === 'close' ? 'text-yellow-300' : 'text-orange-300'}`}>
-            {feedback === 'correct' ? '🌟 Mükemmel tahmin!' : feedback === 'close' ? '👍 Yaklaştın!' : '💫 Biraz uzak kaldı'}
-          </p>
+          <div className={`flex items-center gap-2 justify-center text-sm font-bold mt-2 ${feedback === 'correct' ? 'text-green-300' : feedback === 'close' ? 'text-yellow-300' : 'text-orange-300'}`}>
+            {feedback === 'correct' ? <><StarSVG size={28} filled glowing /><span>Mükemmel tahmin!</span></> : feedback === 'close' ? '👍 Yaklaştın!' : '💫 Biraz uzak kaldı'}
+          </div>
         </motion.div>
       )}
     </div>

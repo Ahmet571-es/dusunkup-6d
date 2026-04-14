@@ -4,6 +4,7 @@
  */
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { FlowerSVG, StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 const FLOWER_COLORS = ['#EF4444','#3B82F6','#22C55E','#EAB308','#A855F7','#EC4899','#F97316','#06B6D4','#8B5CF6']
@@ -202,9 +203,9 @@ export default function HafizaBahcesi({ session, state }: { session: SessionMana
             >
               {/* Flower icon when revealed */}
               {(mode === 'matching' && (cell.isRevealed || cell.isMatched)) && (
-                <motion.span className="text-2xl" initial={{ scale: 0, rotate: -180 }} animate={{ scale: 1, rotate: 0 }}>
-                  {typeof cell.value === 'number' ? ['🌸','🌻','🌷','🌹','🌺','💐'][cell.value - 1] || '🌼' : cell.value}
-                </motion.span>
+                <motion.div initial={{ scale: 0, rotate: -180 }} animate={{ scale: 1, rotate: 0 }}>
+                  <FlowerSVG color={cell.color} size={32} blooming={cell.isMatched} />
+                </motion.div>
               )}
               {/* Spatial mode: show order number when active */}
               {mode === 'spatial' && activeCell === i && (
@@ -232,7 +233,7 @@ export default function HafizaBahcesi({ session, state }: { session: SessionMana
       <AnimatePresence>
         {feedback && (
           <motion.div className="text-center" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>
-            <span className="text-5xl">{feedback === 'correct' ? '🌟' : '💫'}</span>
+            <div className="flex justify-center">{feedback === 'correct' ? <StarSVG size={56} filled glowing /> : <span className="text-5xl">💫</span>}</div>
             <p className={`text-sm font-bold mt-1 ${feedback === 'correct' ? 'text-green-300' : 'text-orange-300'}`}>
               {feedback === 'correct' ? 'Harika!' : 'Tekrar dene!'}
             </p>

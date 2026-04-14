@@ -4,12 +4,36 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type Rule = 'color' | 'shape' | 'size'
 const COLORS = [{ name: 'Kırmızı', val: '#EF4444' }, { name: 'Mavi', val: '#3B82F6' }, { name: 'Yeşil', val: '#22C55E' }]
-const SHAPES = ['●', '■', '▲']
 const SIZES = ['küçük', 'büyük']
+
+function ShapeGlyph({ shape, color, sz }: { shape: number; color: string; sz: number }) {
+  const id = color.replace('#','') + shape
+  return (
+    <svg width={sz} height={sz} viewBox="0 0 50 50">
+      <defs>
+        <radialGradient id={`sg_${id}`} cx="38%" cy="32%">
+          <stop offset="0%" stopColor="white" stopOpacity="0.35" />
+          <stop offset="50%" stopColor={color} stopOpacity="0.9" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.65" />
+        </radialGradient>
+        <filter id={`sgg_${id}`}><feDropShadow dx="0" dy="0" stdDeviation="3" floodColor={color} floodOpacity="0.45" /></filter>
+      </defs>
+      <g filter={`url(#sgg_${id})`}>
+        {shape === 0 && <circle cx="25" cy="25" r="20" fill={`url(#sg_${id})`} stroke={color} strokeWidth="1.5" strokeOpacity="0.5" />}
+        {shape === 1 && <rect x="5" y="5" width="40" height="40" rx="4" fill={`url(#sg_${id})`} stroke={color} strokeWidth="1.5" strokeOpacity="0.5" />}
+        {shape === 2 && <path d="M25,4 L46,42 L4,42 Z" fill={`url(#sg_${id})`} stroke={color} strokeWidth="1.5" strokeOpacity="0.5" strokeLinejoin="round" />}
+      </g>
+      {shape === 0 && <ellipse cx="18" cy="18" rx="6" ry="4" fill="white" opacity="0.15" />}
+      {shape === 1 && <rect x="10" y="10" width="12" height="8" rx="2" fill="white" opacity="0.1" />}
+      {shape === 2 && <path d="M25,12 L33,28 L17,28 Z" fill="white" opacity="0.08" />}
+    </svg>
+  )
+}
 
 interface Stimulus { color: number; shape: number; size: number }
 
@@ -87,13 +111,7 @@ export default function KuralDegistir({ session, state }: { session: SessionMana
       <motion.div key={round} className="w-32 h-32 rounded-2xl flex items-center justify-center"
         style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
         initial={{ scale: 0, rotate: -10 }} animate={{ scale: 1, rotate: 0 }}>
-        <span style={{
-          fontSize: stimulus.size === 0 ? 36 : 64,
-          color: COLORS[stimulus.color].val,
-          filter: `drop-shadow(0 0 8px ${COLORS[stimulus.color].val}40)`,
-        }}>
-          {SHAPES[stimulus.shape]}
-        </span>
+        <ShapeGlyph shape={stimulus.shape} color={COLORS[stimulus.color].val} sz={stimulus.size === 0 ? 48 : 80} />
       </motion.div>
 
       {/* Options */}
@@ -110,9 +128,9 @@ export default function KuralDegistir({ session, state }: { session: SessionMana
       </div>
 
       <AnimatePresence>
-        {feedback && <motion.span className="text-4xl" initial={{scale:0}} animate={{scale:1}} exit={{opacity:0}}>
-          {feedback === 'correct' ? '✨' : '💨'}
-        </motion.span>}
+        {feedback && <motion.div initial={{scale:0}} animate={{scale:1}} exit={{opacity:0}}>
+          {feedback === 'correct' ? <StarSVG size={48} filled glowing /> : <span className="text-4xl">💨</span>}
+        </motion.div>}
       </AnimatePresence>
     </div>
   )

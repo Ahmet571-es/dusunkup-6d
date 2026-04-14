@@ -6,6 +6,7 @@
  */
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type AdditionMode = 'ten_frame' | 'number_bonds' | 'speed_drill' | 'word_problem'
@@ -17,20 +18,26 @@ interface Problem {
 
 // Ten Frame visualization
 function TenFrame({ count, color = '#3B82F6' }: { count: number; color?: string }) {
+  const id = color.replace('#','')
   return (
     <div className="grid grid-cols-5 gap-1" style={{ width: 130 }}>
       {Array.from({ length: 10 }, (_, i) => (
-        <motion.div key={i}
-          className="w-5 h-5 rounded-md"
-          style={{
-            background: i < count ? color : 'rgba(255,255,255,0.06)',
-            border: `1.5px solid ${i < count ? color + '80' : 'rgba(255,255,255,0.1)'}`,
-            boxShadow: i < count ? `0 0 6px ${color}30` : 'none',
-          }}
+        <motion.div key={i} className="w-5 h-5 flex items-center justify-center"
           initial={i < count ? { scale: 0 } : {}}
           animate={{ scale: 1 }}
-          transition={{ delay: i * 0.03 }}
-        />
+          transition={{ delay: i * 0.03 }}>
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <defs>
+              <radialGradient id={`tf_${id}_${i}`} cx="40%" cy="35%">
+                <stop offset="0%" stopColor={i < count ? 'white' : 'transparent'} stopOpacity="0.3" />
+                <stop offset="100%" stopColor={i < count ? color : 'transparent'} stopOpacity={i < count ? 0.85 : 0.06} />
+              </radialGradient>
+              {i < count && <filter id={`tfg_${id}_${i}`}><feDropShadow dx="0" dy="0" stdDeviation="2" floodColor={color} floodOpacity="0.4" /></filter>}
+            </defs>
+            <rect x="1" y="1" width="18" height="18" rx="4" fill={`url(#tf_${id}_${i})`} stroke={i < count ? color : 'rgba(255,255,255,0.1)'} strokeWidth="1.2" strokeOpacity={i < count ? 0.6 : 0.5} filter={i < count ? `url(#tfg_${id}_${i})` : undefined} />
+            {i < count && <ellipse cx="8" cy="7" rx="3.5" ry="2.5" fill="white" opacity="0.12" />}
+          </svg>
+        </motion.div>
       ))}
     </div>
   )
@@ -206,7 +213,7 @@ export default function ToplamaCesmesi({ session, state }: { session: SessionMan
       <AnimatePresence>
         {feedback && (
           <motion.div className="text-center" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ opacity: 0 }}>
-            <span className="text-5xl">{feedback === 'correct' ? '🌟' : '💫'}</span>
+            <div className="flex justify-center">{feedback === 'correct' ? <StarSVG size={56} filled glowing /> : <span className="text-5xl">💫</span>}</div>
           </motion.div>
         )}
       </AnimatePresence>
