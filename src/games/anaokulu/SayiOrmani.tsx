@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SquirrelSVG as CinemaSquirrel } from '@/components/cinema/characters'
+import { SquirrelSVG as CinemaSquirrel, ButterflySVG, RabbitSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 // === TYPES ===
@@ -36,24 +36,7 @@ interface Question {
 // === ANIMAL SVGs ===
 // SquirrelSVG imported from cinema/characters (CinemaSquirrel)
 
-function RabbitSVG({ size = 38 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 80 80">
-      <ellipse cx="40" cy="74" rx="14" ry="2.5" fill="rgba(0,0,0,0.12)"/>
-      <ellipse cx="40" cy="50" rx="14" ry="18" fill="#E5E1DC"/>
-      <circle cx="40" cy="34" r="14" fill="#E5E1DC"/>
-      <ellipse cx="32" cy="12" rx="5" ry="16" fill="#E5E1DC"/>
-      <ellipse cx="32" cy="12" rx="3" ry="12" fill="#F2C4C4"/>
-      <ellipse cx="48" cy="12" rx="5" ry="16" fill="#E5E1DC"/>
-      <ellipse cx="48" cy="12" rx="3" ry="12" fill="#F2C4C4"/>
-      <ellipse cx="34" cy="32" rx="3.5" ry="4" fill="white"/>
-      <ellipse cx="46" cy="32" rx="3.5" ry="4" fill="white"/>
-      <circle cx="35" cy="32" r="2" fill="#3D2020"/>
-      <circle cx="47" cy="32" r="2" fill="#3D2020"/>
-      <ellipse cx="40" cy="38" rx="2.5" ry="1.5" fill="#F2AAAA"/>
-    </svg>
-  )
-}
+// RabbitSVG imported from cinema/characters
 
 function HedgehogSVG({ size = 36 }: { size?: number }) {
   return (
@@ -76,20 +59,7 @@ function HedgehogSVG({ size = 36 }: { size?: number }) {
   )
 }
 
-function ButterflySVG({ size = 30 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 60 60">
-      <ellipse cx="30" cy="30" rx="2" ry="10" fill="#4A3520"/>
-      <ellipse cx="20" cy="24" rx="10" ry="12" fill="#818CF8" opacity="0.8"/>
-      <ellipse cx="40" cy="24" rx="10" ry="12" fill="#818CF8" opacity="0.8"/>
-      <ellipse cx="24" cy="38" rx="6" ry="8" fill="#C084FC" opacity="0.7"/>
-      <ellipse cx="36" cy="38" rx="6" ry="8" fill="#C084FC" opacity="0.7"/>
-      <circle cx="30" cy="18" r="2.5" fill="#4A3520"/>
-      <line x1="28" y1="16" x2="24" y2="10" stroke="#4A3520" strokeWidth="0.8"/>
-      <line x1="32" y1="16" x2="36" y2="10" stroke="#4A3520" strokeWidth="0.8"/>
-    </svg>
-  )
-}
+// ButterflySVG imported from cinema/characters
 
 // === QUESTION GENERATOR ===
 function generateQuestion(module: Module, difficulty: Record<string, number>): Question {
