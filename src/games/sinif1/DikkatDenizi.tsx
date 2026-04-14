@@ -107,7 +107,7 @@ export default function DikkatDenizi({ session, state }: { session: SessionManag
               return (
                 <span key={i} className={`${isCenter ? 'text-4xl' : 'text-3xl'} ${isCenter ? '' : 'opacity-60'}`}
                   style={{ color: isCenter ? '#67E8F9' : '#67E8F940', filter: isCenter ? 'drop-shadow(0 0 8px rgba(103,232,249,0.4))' : 'none' }}>
-                  {f === '←' ? '🐟' : f === '→' ? '🐠' : '〰️'}
+                  {f === '←' ? <FishSVG size={isCenter ? 36 : 22} direction='left' color='#3B82F6' /> : f === '→' ? <FishSVG size={isCenter ? 36 : 22} direction='right' color='#22C55E' /> : <span className='opacity-30'>〰️</span>}
                 </span>
               )
             })}

@@ -29,19 +29,23 @@ const COLORS = [
   { name: 'Turuncu', value: '#F97316', light: '#FDBA74' },
 ]
 
-function BalloonSVG({ color, light, size = 48 }: { color: string; light: string; size?: number }) {
+function BalloonSVG({ color, light, size = 52 }: { color: string; light: string; size?: number }) {
+  const id = color.replace('#','')
   return (
-    <svg width={size} height={size * 1.3} viewBox="0 0 50 65">
+    <svg width={size} height={size * 1.4} viewBox="0 0 50 70">
       <defs>
-        <radialGradient id={`bg${color.replace('#','')}`} cx="35%" cy="35%">
-          <stop offset="0%" stopColor={light} />
+        <radialGradient id={`bg${id}`} cx="35%" cy="28%">
+          <stop offset="0%" stopColor="white" stopOpacity="0.35" />
+          <stop offset="30%" stopColor={light} />
           <stop offset="100%" stopColor={color} />
         </radialGradient>
+        <filter id={`sh${id}`}><feDropShadow dx="0" dy="3" stdDeviation="4" floodColor={color} floodOpacity="0.35" /></filter>
       </defs>
-      <ellipse cx="25" cy="25" rx="22" ry="25" fill={`url(#bg${color.replace('#','')})`} />
-      <ellipse cx="18" cy="18" rx="6" ry="8" fill="rgba(255,255,255,0.25)" transform="rotate(-20 18 18)" />
-      <path d="M25 50 L22 58 L28 58 Z" fill={color} />
-      <line x1="25" y1="58" x2="25" y2="65" stroke={color} strokeWidth="1" opacity="0.6" />
+      <ellipse cx="25" cy="26" rx="22" ry="26" fill={`url(#bg${id})`} filter={`url(#sh${id})`} />
+      <ellipse cx="17" cy="16" rx="7" ry="11" fill="white" opacity="0.22" transform="rotate(-18 17 16)" />
+      <ellipse cx="14" cy="13" rx="3" ry="5" fill="white" opacity="0.18" transform="rotate(-18 14 13)" />
+      <path d="M22,50 L25,56 L28,50" fill={color} opacity="0.9" />
+      <path d="M25,56 Q23,61 26,64 Q24,67 25,70" fill="none" stroke={color} strokeWidth="0.8" opacity="0.4" strokeLinecap="round" />
     </svg>
   )
 }
