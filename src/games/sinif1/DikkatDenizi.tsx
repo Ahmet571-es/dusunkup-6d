@@ -5,6 +5,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
+import { FishSVG } from '@/components/cinema/characters'
 
 type FlankerType = 'congruent' | 'incongruent' | 'neutral'
 
