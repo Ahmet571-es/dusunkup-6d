@@ -40,17 +40,30 @@ function PizzaSVG({ slices, filled, size = 130 }: { slices: number; filled: numb
   )
 }
 
-function StripModel({ total, filled, width = 240 }: { total: number; filled: number; width?: number }) {
+function StripModel({ total, filled, width = 260 }: { total: number; filled: number; width?: number }) {
   const cellW = width / total
   return (
-    <div className="flex" style={{ width }}>
-      {Array.from({ length: total }, (_, i) => (
-        <motion.div key={i} style={{ width: cellW, height: 28 }}
-          className={`border border-white/10 ${i < filled ? '' : ''}`}
-          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: i * 0.05 }}>
-          <div className="w-full h-full" style={{ background: i < filled ? 'rgba(59,130,246,0.4)' : 'rgba(255,255,255,0.04)' }} />
-        </motion.div>
-      ))}
+    <div className="flex rounded-lg overflow-hidden" style={{ width, border: '2px solid rgba(255,255,255,0.15)' }}>
+      {Array.from({ length: total }, (_, i) => {
+        const isFilled = i < filled
+        return (
+          <motion.div key={i} style={{ width: cellW, height: 36 }}
+            className="relative"
+            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: i * 0.06 }}>
+            <div className="w-full h-full" style={{
+              background: isFilled
+                ? 'linear-gradient(180deg, #60A5FA, #3B82F6)'
+                : 'rgba(255,255,255,0.06)',
+              borderRight: i < total - 1 ? '1.5px solid rgba(255,255,255,0.12)' : 'none',
+            }} />
+            {isFilled && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-[10px] font-bold text-white/80">✓</span>
+              </div>
+            )}
+          </motion.div>
+        )
+      })}
     </div>
   )
 }
@@ -58,13 +71,22 @@ function StripModel({ total, filled, width = 240 }: { total: number; filled: num
 function SetModel({ total, filled }: { total: number; filled: number }) {
   const emojis = ['🍎', '🍊', '🍋', '🍇', '🍓', '🫐', '🍑', '🥝']
   return (
-    <div className="flex gap-1.5 flex-wrap justify-center">
-      {Array.from({ length: total }, (_, i) => (
-        <motion.span key={i} className={`text-2xl ${i < filled ? '' : 'grayscale opacity-30'}`}
-          initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.04 }}>
-          {emojis[i % emojis.length]}
-        </motion.span>
-      ))}
+    <div className="flex gap-2 flex-wrap justify-center">
+      {Array.from({ length: total }, (_, i) => {
+        const isFilled = i < filled
+        return (
+          <motion.div key={i} className="flex items-center justify-center w-10 h-10 rounded-lg"
+            style={{
+              background: isFilled ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.03)',
+              border: `1.5px solid ${isFilled ? 'rgba(52,211,153,0.25)' : 'rgba(255,255,255,0.06)'}`,
+            }}
+            initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.05 }}>
+            <span className={`text-xl ${isFilled ? '' : 'grayscale opacity-20'}`}>
+              {emojis[i % emojis.length]}
+            </span>
+          </motion.div>
+        )
+      })}
     </div>
   )
 }

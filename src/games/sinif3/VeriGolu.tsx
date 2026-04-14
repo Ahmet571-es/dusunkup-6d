@@ -1,6 +1,6 @@
 /**
  * Veri Gölü — Grafik Okuma + Tablo Yorumlama
- * 4 Mod: Sıklık Tablosu → Çubuk Grafik → Resim Grafik → Karşılaştırmalı Yorumlama
+ * 4 Mod: Sıklık → Çubuk Grafik → Fark → Koşullu Sayma
  * SVG çubuk grafik, gerçek veri seti, çoklu soru tipi
  */
 import { useState, useEffect, useRef } from 'react'
@@ -16,7 +16,6 @@ const LABEL_SETS = [
 ]
 
 type DataMode = 'max_min' | 'total' | 'difference' | 'more_than'
-
 interface DataQuestion { labels: string[]; values: number[]; question: string; answer: number; options: number[]; mode: DataMode }
 
 function generateQuestion(mode: DataMode): DataQuestion {
@@ -42,7 +41,7 @@ function generateQuestion(mode: DataMode): DataQuestion {
     let i2 = Math.floor(Math.random() * labels.length)
     while (i2 === i1) i2 = Math.floor(Math.random() * labels.length)
     const diff = Math.abs(values[i1] - values[i2])
-    return { labels, values, mode, question: `"${labels[i1]}" ile "${labels[i2]}" arasındaki fark kaç?`, answer: diff, options: genOptions(diff) }
+    return { labels, values, mode, question: `"${labels[i1]}" ile "${labels[i2]}" farkı kaç?`, answer: diff, options: genOptions(diff) }
   } else {
     const threshold = 3 + Math.floor(Math.random() * 5)
     const count = values.filter(v => v > threshold).length
@@ -56,30 +55,32 @@ function genOptions(correct: number): number[] {
   return [...new Set(opts)].sort(() => Math.random() - 0.5).slice(0, 4)
 }
 
-function BarChart({ values, labels, colors = BAR_COLORS, height = 130 }: { values: number[]; labels: string[]; colors?: string[]; height?: number }) {
+function BarChart({ values, labels }: { values: number[]; labels: string[] }) {
   const max = Math.max(...values, 1)
+  const barHeight = 100
+
   return (
-    <div className="w-full">
-      <div className="flex items-end gap-2 justify-center" style={{ height }}>
-        {values.map((v, i) => (
-          <div key={i} className="flex-1 flex flex-col items-center max-w-[44px]">
-            <motion.span className="text-[10px] font-bold text-white/50 mb-1"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.1 + 0.3 }}>
-              {v}
-            </motion.span>
-            <motion.div className="w-full rounded-t-md"
-              style={{ background: `linear-gradient(180deg, ${colors[i % colors.length]}dd, ${colors[i % colors.length]}88)`, boxShadow: `inset 0 2px 4px rgba(255,255,255,0.15)` }}
-              initial={{ height: 0 }} animate={{ height: `${(v / max) * (height - 35)}px` }}
-              transition={{ delay: i * 0.08, duration: 0.5, ease: 'easeOut' }} />
-            <span className="text-[9px] text-white/30 mt-1.5 text-center truncate w-full">{labels[i]}</span>
-          </div>
-        ))}
+    <div className="w-full px-2">
+      {/* Chart area — NO negative margin, NO overlay tricks */}
+      <div className="flex items-end gap-3 justify-center" style={{ height: barHeight }}>
+        {values.map((v, i) => {
+          const h = Math.max(8, (v / max) * (barHeight - 20))
+          return (
+            <div key={i} className="flex-1 flex flex-col items-center" style={{ maxWidth: 48 }}>
+              <span className="text-xs font-bold text-white mb-1">{v}</span>
+              <motion.div className="w-full rounded-t-md"
+                style={{ height: h, background: BAR_COLORS[i % BAR_COLORS.length], boxShadow: `0 0 8px ${BAR_COLORS[i % BAR_COLORS.length]}30` }}
+                initial={{ height: 0 }} animate={{ height: h }}
+                transition={{ delay: i * 0.1, duration: 0.5 }} />
+            </div>
+          )
+        })}
       </div>
-      {/* Y-axis guide lines */}
-      <div className="relative -mt-[calc(100%-10px)] pointer-events-none" style={{ height: height - 30 }}>
-        {[0.25, 0.5, 0.75].map((pct, i) => (
-          <div key={i} className="absolute w-full border-t border-white/5" style={{ bottom: `${pct * 100}%` }}>
-            <span className="absolute -left-6 -top-2 text-[8px] text-white/15">{Math.round(max * pct)}</span>
+      {/* Labels — separate row, clear spacing */}
+      <div className="flex gap-3 justify-center mt-2">
+        {labels.map((l, i) => (
+          <div key={i} className="flex-1 text-center" style={{ maxWidth: 48 }}>
+            <span className="text-[10px] text-white/50">{l}</span>
           </div>
         ))}
       </div>
@@ -103,7 +104,6 @@ export default function VeriGolu({ session, state }: { session: SessionManager; 
   const handleAnswer = (val: number) => {
     if (feedback) return; const correct = val === data.answer
     if (correct) setStreak(s => s + 1); else setStreak(0)
-
     session.recordTrial({ timestamp: Date.now(), trialType: 'math', stimulusShownAt: stimRef.current, responseAt: Date.now(), responseTimeMs: Date.now() - stimRef.current, isCorrect: correct, isTarget: true, responded: true, difficultyAxes: state.difficultyAxes, metadata: { skillId: `sinif3_veri_${data.mode}`, mode: data.mode, question: data.question, streak } })
     setFeedback(correct ? 'correct' : 'wrong')
     setTimeout(() => { setFeedback(null); setRound(r => r + 1) }, correct ? 900 : 700)
@@ -112,22 +112,24 @@ export default function VeriGolu({ session, state }: { session: SessionManager; 
   const modeLabels: Record<DataMode, string> = { max_min: '📊 En çok/az', total: '➕ Toplam', difference: '↔️ Fark', more_than: '📈 Koşullu sayma' }
 
   return (
-    <div className="flex flex-col items-center justify-center h-full p-3 gap-3">
-      <div className="flex items-center gap-3 w-full max-w-md justify-between">
-        <span className="text-xs font-bold px-3 py-1 rounded-lg" style={{ background: 'rgba(6,182,212,0.1)', color: '#67E8F9', border: '1px solid rgba(6,182,212,0.15)' }}>📊 {modeLabels[data.mode]}</span>
-        {streak >= 3 && <span className="text-xs text-orange-300">🔥 {streak}</span>}
-      </div>
+    <div className="flex flex-col items-center justify-center h-full p-3 gap-4">
+      <span className="text-xs font-bold px-3 py-1 rounded-lg" style={{ background: 'rgba(6,182,212,0.1)', color: '#67E8F9', border: '1px solid rgba(6,182,212,0.15)' }}>
+        {modeLabels[data.mode]}
+      </span>
 
-      <div className="w-full max-w-md rounded-2xl p-4" style={{ background: 'rgba(10,15,30,0.7)', border: '1px solid rgba(6,182,212,0.08)' }}>
+      {/* Chart container — clear boundaries */}
+      <div className="w-full max-w-sm rounded-2xl p-4 pb-3" style={{ background: 'rgba(10,15,30,0.7)', border: '1px solid rgba(6,182,212,0.1)' }}>
         <BarChart values={data.values} labels={data.labels} />
       </div>
 
-      <p className="text-sm font-bold text-green-300 text-center max-w-md">{data.question}</p>
+      {/* Question — clearly separated */}
+      <p className="text-sm font-bold text-green-300 text-center px-4">{data.question}</p>
 
-      <div className="flex gap-3">
+      {/* Options — clearly separated from chart */}
+      <div className="flex gap-3 px-4">
         {data.options.map((opt, i) => (
           <motion.button key={i} className="w-14 h-14 rounded-xl text-xl font-black text-white"
-            style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.1)' }}
+            style={{ background: 'rgba(52,211,153,0.08)', border: '2px solid rgba(52,211,153,0.2)' }}
             whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }} onClick={() => handleAnswer(opt)}>{opt}</motion.button>
         ))}
       </div>
