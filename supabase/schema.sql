@@ -365,3 +365,28 @@ ALTER TABLE alerts ENABLE ROW LEVEL SECURITY;
 -- Note: RLS policies will be configured based on auth setup
 -- For now, service_role key bypasses RLS
 
+
+-- ============================================================
+-- Session Feedback — Cocuk geri bildirimleri (opsiyonel)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS session_feedback (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  game_id TEXT NOT NULL,
+  student_id TEXT,           -- Avatar adi veya student.id (opsiyonel, anonim de olabilir)
+  enjoyment SMALLINT NOT NULL CHECK (enjoyment BETWEEN 1 AND 5),
+  difficulty TEXT NOT NULL CHECK (difficulty IN ('easy', 'right', 'hard')),
+  would_play_again BOOLEAN NOT NULL,
+  duration_sec INTEGER,
+  accuracy NUMERIC(4,3),
+  score INTEGER,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_feedback_game ON session_feedback(game_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_created ON session_feedback(created_at DESC);
+
+ALTER TABLE session_feedback ENABLE ROW LEVEL SECURITY;
+-- Anonim insert'e izin ver (ogretmen olmasa bile cocuk geri bildirim birakabilir)
+CREATE POLICY "Allow anonymous insert" ON session_feedback FOR INSERT WITH CHECK (true);
+-- Okuma sadece authenticated (ogretmen paneli)
+CREATE POLICY "Allow authenticated read" ON session_feedback FOR SELECT USING (auth.role() = 'authenticated' OR auth.role() = 'service_role');

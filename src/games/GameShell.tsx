@@ -11,6 +11,7 @@ import { GRADE_LABELS, GRADE_SESSION_DURATION, type GradeLevel } from '@/types'
 import { useAppStore } from '@/stores/appStore'
 import { ConfettiBurst, StreakFire, Sparkles } from '@/components/cinema/Particles'
 import { ForestScene, OceanScene, SpaceScene, KitchenScene, LabScene } from '@/components/cinema/Backgrounds'
+import SessionFeedbackWidget from '@/components/shared/SessionFeedback'
 
 interface GameShellProps {
   children: (session: SessionManager, state: SessionState) => React.ReactNode
@@ -44,6 +45,7 @@ export default function GameShell({ children }: GameShellProps) {
   const [showBreak, setShowBreak] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
   const [streak, setStreak] = useState(0)
+  const [showFeedback, setShowFeedback] = useState(false)
   const sessionRef = useRef<SessionManager | null>(null)
   const prevScore = useRef(0)
 
@@ -135,7 +137,7 @@ export default function GameShell({ children }: GameShellProps) {
         style={{ background: 'rgba(10,15,30,0.8)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
         initial={{ y: -40 }} animate={{ y: 0 }} transition={{ duration: 0.4, ease: 'easeOut' }}>
         
-        <motion.button onClick={() => navigate('/galaxy')}
+        <motion.button onClick={() => { if (sessionState.trials >= 3) setShowFeedback(true); else navigate('/galaxy') }}
           className="px-3 py-1.5 rounded-lg text-xs font-bold text-white"
           style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
           whileHover={{ scale: 1.05, background: 'rgba(255,255,255,0.1)' }}
@@ -238,6 +240,19 @@ export default function GameShell({ children }: GameShellProps) {
               </motion.button>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+      {/* === Session End Feedback === */}
+      <AnimatePresence>
+        {showFeedback && (
+          <SessionFeedbackWidget
+            gameId={gameId || 'unknown'}
+            studentId={avatar?.name}
+            durationSec={sessionState.elapsedSeconds}
+            accuracy={accuracy / 100}
+            score={sessionState.score}
+            onDone={() => { setShowFeedback(false); navigate('/galaxy') }}
+          />
         )}
       </AnimatePresence>
     </div>

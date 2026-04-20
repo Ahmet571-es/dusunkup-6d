@@ -13,6 +13,7 @@ import TeacherLoginPage from '@/pages/teacher/TeacherLoginPage'
 import TeacherDashboardPage from '@/pages/teacher/TeacherDashboardPage'
 import ClassStudentsPage from '@/pages/teacher/ClassStudentsPage'
 import StudentDetailPage from '@/pages/teacher/StudentDetailPage'
+import FeedbackInsightsPage from '@/pages/teacher/FeedbackInsightsPage'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/teacher/dashboard" element={<TeacherDashboardPage />} />
         <Route path="/teacher/class/:classId" element={<ClassStudentsPage />} />
         <Route path="/teacher/student/:studentId" element={<StudentDetailPage />} />
+        <Route path="/teacher/feedback" element={<FeedbackInsightsPage />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

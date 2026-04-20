@@ -50,13 +50,20 @@ export default function TeacherDashboardPage() {
 
       <div className="max-w-5xl mx-auto p-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
           <h2 className="text-2xl font-bold" style={{ color: 'var(--color-teacher-primary)' }}>📁 Sınıflarım</h2>
-          <button onClick={() => setShowAddModal(true)}
-            className="px-5 py-2.5 rounded-xl text-white text-sm font-bold transition hover:opacity-90 flex items-center gap-2"
-            style={{ background: 'var(--color-teacher-accent)' }}>
-            ➕ Yeni Sınıf
-          </button>
+          <div className="flex gap-2">
+            <button onClick={() => navigate('/teacher/feedback')}
+              className="px-4 py-2.5 rounded-xl text-sm font-bold transition hover:opacity-90 flex items-center gap-2"
+              style={{ background: 'rgba(139,92,246,0.12)', color: '#8B5CF6', border: '1px solid rgba(139,92,246,0.25)' }}>
+              💬 Çocuk Geri Bildirimleri
+            </button>
+            <button onClick={() => setShowAddModal(true)}
+              className="px-5 py-2.5 rounded-xl text-white text-sm font-bold transition hover:opacity-90 flex items-center gap-2"
+              style={{ background: 'var(--color-teacher-accent)' }}>
+              ➕ Yeni Sınıf
+            </button>
+          </div>
         </div>
 
         {/* Class Grid */}
