@@ -53,7 +53,9 @@ export default function DonusumAtolyesi({ session, state }: { session: SessionMa
 
   const handleSubmit = () => {
     if (feedback) return
-    const val = parseFloat(input); if (isNaN(val)) return
+    // Türkçe ondalık virgülü desteği: "0,5" → "0.5"
+    const normalized = input.replace(',', '.')
+    const val = parseFloat(normalized); if (isNaN(val)) return
     const correct = val === conv.answer
     if (correct) setStreak(s => s + 1); else { setStreak(0); setShowChain(true) }
 

@@ -23,7 +23,8 @@ export default function GelismisNback({ session, state }: { session: SessionMana
   const [hits, setHits] = useState(0)
   const [misses, setMisses] = useState(0)
   const [fas, setFas] = useState(0)
-  const [responded, setResponded] = useState(false)
+  // responded: useRef olmalı — setTimeout closure'ı içinde okunduğu için state kullanılırsa stale olur
+  const respondedRef = useRef(false)
   const stimRef = useRef(Date.now())
 
   useEffect(() => {
@@ -47,13 +48,14 @@ export default function GelismisNback({ session, state }: { session: SessionMana
       else if (acc < 0.4) setNLevel(n => Math.max(2, n - 1))
       return
     }
-    setShowItem(true); setResponded(false); stimRef.current = Date.now()
+    setShowItem(true); respondedRef.current = false; stimRef.current = Date.now()
     const t = setTimeout(() => {
       setShowItem(false)
       const isMatch = mode === 'shape' ? (idx >= nLevel && shapeSeq[idx] === shapeSeq[idx - nLevel])
         : mode === 'position' ? (idx >= nLevel && posSeq[idx] === posSeq[idx - nLevel])
         : (idx >= nLevel && (shapeSeq[idx] === shapeSeq[idx - nLevel] || posSeq[idx] === posSeq[idx - nLevel]))
-      if (isMatch && !responded) setMisses(m => m + 1)
+      // Hedef vardı ama kullanıcı basmadı → gerçek miss
+      if (isMatch && !respondedRef.current) setMisses(m => m + 1)
       setTimeout(() => setIdx(i => i + 1), 250)
     }, 1500)
     return () => clearTimeout(t)
@@ -64,7 +66,8 @@ export default function GelismisNback({ session, state }: { session: SessionMana
   const isMatch = mode === 'shape' ? shapeMatch : mode === 'position' ? posMatch : (shapeMatch || posMatch)
 
   const respond = (saysMatch: boolean) => {
-    if (feedback || !showItem || responded) return; setResponded(true)
+    if (feedback || !showItem || respondedRef.current) return
+    respondedRef.current = true
     const correct = saysMatch === isMatch
     if (correct && isMatch) setHits(h => h + 1)
     else if (!correct && saysMatch) setFas(f => f + 1)
