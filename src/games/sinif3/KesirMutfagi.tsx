@@ -5,7 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FlowerSVG, StarSVG } from '@/components/cinema/characters'
+import { FlowerSVG, StarSVG, AppleSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type FracMode = 'identify' | 'compare' | 'equivalent' | 'add'
@@ -71,21 +71,23 @@ function StripModel({ total, filled, width = 260 }: { total: number; filled: num
 }
 
 function SetModel({ total, filled }: { total: number; filled: number }) {
-  const emojis = ['🍎', '🍊', '🍋', '🍇', '🍓', '🫐', '🍑', '🥝']
+  // Meyve çeşitliliği için renk varyasyonu (elma, armut-yeşil, hindistan cevizi-pembe, üzüm-mor, şeftali-turuncu)
+  const colors = ['#EF4444', '#22C55E', '#EC4899', '#A855F7', '#F97316', '#EAB308', '#06B6D4', '#84CC16']
   return (
     <div className="flex gap-2 flex-wrap justify-center">
       {Array.from({ length: total }, (_, i) => {
         const isFilled = i < filled
+        const color = colors[i % colors.length]
         return (
-          <motion.div key={i} className="flex items-center justify-center w-10 h-10 rounded-lg"
+          <motion.div key={i} className="flex items-center justify-center w-12 h-12 rounded-lg"
             style={{
               background: isFilled ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.03)',
               border: `1.5px solid ${isFilled ? 'rgba(52,211,153,0.25)' : 'rgba(255,255,255,0.06)'}`,
+              opacity: isFilled ? 1 : 0.25,
+              filter: isFilled ? 'none' : 'grayscale(1)',
             }}
             initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.05 }}>
-            <span className={`text-xl ${isFilled ? '' : 'grayscale opacity-20'}`}>
-              {emojis[i % emojis.length]}
-            </span>
+            <AppleSVG size={30} color={color} />
           </motion.div>
         )
       })}
