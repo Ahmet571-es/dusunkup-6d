@@ -100,13 +100,18 @@ export default function OndalikOkyanus({ session, state }: { session: SessionMan
     } else if (m === 'place_value') {
       const num = Math.floor(Math.random() * 900 + 100) / 100
       setTargetNum(num)
-      const positions = [
-        { name: 'birler', idx: 0 }, { name: 'onda birler', idx: 2 }, { name: 'yüzde birler', idx: 3 },
-      ]
-      const pos = positions[Math.floor(Math.random() * positions.length)]
-      const str = num.toFixed(2).replace('.', '')
-      const correct = str[pos.idx] || '0'
-      setQuestion(`${num.toFixed(2)} sayısında ${pos.name} basamağındaki rakam?`)
+      // Doğru basamak tespiti: integer ve decimal parçaları ayrı ele al
+      const intStr = Math.floor(num).toString()
+      const decStr = num.toFixed(2).split('.')[1] || '00'
+      const digitMap: Record<string, string> = {
+        'birler': intStr[intStr.length - 1] || '0',
+        'onda birler': decStr[0] || '0',
+        'yüzde birler': decStr[1] || '0',
+      }
+      const positions = Object.keys(digitMap)
+      const posName = positions[Math.floor(Math.random() * positions.length)]
+      const correct = digitMap[posName]
+      setQuestion(`${num.toFixed(2)} sayısında ${posName} basamağındaki rakam?`)
       const opts = [...new Set([correct, ...['0','1','2','3','4','5','6','7','8','9'].filter(d => d !== correct).sort(() => Math.random() - 0.5).slice(0, 3)])].sort(() => Math.random() - 0.5).slice(0, 4)
       if (!opts.includes(correct)) opts[0] = correct
       setOptions(opts); setCorrectAnswer(correct)
