@@ -32,7 +32,8 @@ function loadLocalFeedback(): SessionFeedback[] {
 }
 
 async function loadRemoteFeedback(): Promise<SessionFeedback[]> {
-  if (!import.meta.env.VITE_SUPABASE_URL) return []
+  // Supabase yapılandırılmamışsa sessizce boş dön (env var yok, localStorage-only mod)
+  if (!supabase) return []
   try {
     const { data, error } = await supabase
       .from('session_feedback')
