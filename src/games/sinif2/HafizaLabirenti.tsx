@@ -20,6 +20,8 @@ export default function HafizaLabirenti({ session, state }: { session: SessionMa
   const [round, setRound] = useState(0)
   const [hits, setHits] = useState(0)
   const [misses, setMisses] = useState(0)
+  // respondedRef: stale closure'dan kaçınmak için useRef
+  const respondedRef = useRef(false)
   const stimRef = useRef(Date.now())
   const gridSize = 9
 
@@ -43,10 +45,13 @@ export default function HafizaLabirenti({ session, state }: { session: SessionMa
       else if (accuracy < 0.5 && misses > 2) setNLevel(n => Math.max(1, n - 1))
       return
     }
-    setShowItem(true); stimRef.current = Date.now()
+    setShowItem(true); respondedRef.current = false; stimRef.current = Date.now()
     const displayTime = Math.max(1000, 2000 - (state.difficultyAxes.time_pressure || 0) * 150)
     const t = setTimeout(() => {
       setShowItem(false)
+      // Eşleşme vardı ama çocuk tepki vermediyse bunu bir miss olarak say
+      const wasMatch = idx >= nLevel && sequence[idx] === sequence[idx - nLevel]
+      if (wasMatch && !respondedRef.current) setMisses(m => m + 1)
       setTimeout(() => setIdx(i => i + 1), 300)
     }, displayTime)
     return () => clearTimeout(t)
@@ -55,7 +60,8 @@ export default function HafizaLabirenti({ session, state }: { session: SessionMa
   const isMatch = idx >= nLevel && sequence[idx] === sequence[idx - nLevel]
 
   const respond = (saysMatch: boolean) => {
-    if (feedback || !showItem) return
+    if (feedback || !showItem || respondedRef.current) return
+    respondedRef.current = true
     const correct = saysMatch === isMatch
     if (correct) setHits(h => h + 1); else setMisses(m => m + 1)
 
