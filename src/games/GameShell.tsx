@@ -35,7 +35,10 @@ export default function GameShell({ children }: GameShellProps) {
   const gradeLevel = useAppStore(s => s.child.gradeLevel)
   const avatar = useAppStore(s => s.child.avatar)
 
-  const grade = gradeLevel || 'anaokulu'
+  // Direct URL desteği: gradeLevel yoksa gameId'den çıkar ("sinif3_kesir_mutfagi" → "sinif3")
+  const VALID_GRADES: GradeLevel[] = ['anaokulu', 'sinif1', 'sinif2', 'sinif3', 'sinif4', 'sinif5']
+  const extractedGrade = VALID_GRADES.find(g => gameId?.startsWith(g + '_'))
+  const grade: GradeLevel = gradeLevel || extractedGrade || 'anaokulu'
   const gameKey = gameId?.replace(`${grade}_`, '') || ''
   const gameDef = getGameDef(grade, gameKey)
 

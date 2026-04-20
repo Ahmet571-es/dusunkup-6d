@@ -6,6 +6,7 @@ import GameErrorBoundary from '@/components/shared/GameErrorBoundary'
 import { useAppStore } from '@/stores/appStore'
 import { getGameDef } from '@/games/gameDefinitions'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
+import type { GradeLevel } from '@/types'
 
 /**
  * Oyun dosyaları sınıfa göre lazy-load ediliyor.
@@ -92,7 +93,13 @@ export default function GamePage() {
   const { gameId } = useParams<{ gameId: string }>()
   const navigate = useNavigate()
   const gradeLevel = useAppStore(s => s.child.gradeLevel)
-  const grade = gradeLevel || 'anaokulu'
+
+  // Doğrudan URL ile açılan oyunlar için (splash/grade akışını atlayan):
+  // gameId formatı "{grade}_{gameKey}" — öne ek olarak kendisi sınıfı belirtiyor.
+  // appStore'da gradeLevel yoksa gameId'den çıkar, böylece bütün sınıf oyunları direct URL ile çalışır.
+  const VALID_GRADES: GradeLevel[] = ['anaokulu', 'sinif1', 'sinif2', 'sinif3', 'sinif4', 'sinif5']
+  const extractedGrade = VALID_GRADES.find(g => gameId?.startsWith(g + '_'))
+  const grade: GradeLevel = gradeLevel || extractedGrade || 'anaokulu'
   const gameKey = gameId?.replace(`${grade}_`, '') || ''
   const gameDef = getGameDef(grade, gameKey)
   const GameComponent = GAMES[grade]?.[gameKey]
