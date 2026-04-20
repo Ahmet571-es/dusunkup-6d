@@ -110,16 +110,31 @@ export default function CarpimBahcesi({ session, state }: { session: SessionMana
         {/* Tekrarlı toplama: grup görselleştirme */}
         {problem.mode === 'repeated_add' && (
           <div className="mb-4">
-            <div className="flex justify-center gap-2 flex-wrap mb-2">
-              {Array.from({ length: problem.a }, (_, g) => (
-                <motion.div key={g} className="flex gap-0.5 px-2 py-1.5 rounded-lg"
-                  style={{ background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.12)' }}
-                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: g * 0.08 }}>
-                  {Array.from({ length: problem.b }, (_, i) => <span key={i}><FlowerSVG color="#EAB308" size={22} /></span>)}
-                </motion.div>
-              ))}
-            </div>
-            <p className="text-xs text-center text-white/40">{problem.a} grup × {problem.b}'er = {Array.from({ length: problem.a }, () => problem.b).join(' + ')}</p>
+            {problem.a * problem.b <= 30 ? (
+              <div className="flex justify-center gap-2 flex-wrap mb-2">
+                {Array.from({ length: problem.a }, (_, g) => (
+                  <motion.div key={g} className="flex gap-0.5 px-2 py-1.5 rounded-lg"
+                    style={{ background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.12)' }}
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: g * 0.08 }}>
+                    {Array.from({ length: problem.b }, (_, i) => <span key={i}><FlowerSVG color="#EAB308" size={22} /></span>)}
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              // Büyük çarpımlarda (örn 9×9=81) tek grup + sayaç
+              <div className="flex justify-center items-center gap-3 mb-2 flex-wrap">
+                {Array.from({ length: Math.min(problem.a, 6) }, (_, g) => (
+                  <motion.div key={g} className="flex items-center gap-1 px-2 py-1.5 rounded-lg"
+                    style={{ background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.12)' }}
+                    initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: g * 0.06 }}>
+                    <FlowerSVG color="#EAB308" size={20} />
+                    <span className="text-xs font-bold text-yellow-300">×{problem.b}</span>
+                  </motion.div>
+                ))}
+                {problem.a > 6 && <span className="text-xs text-white/40">... toplam {problem.a} grup</span>}
+              </div>
+            )}
+            <p className="text-xs text-center text-white/40">{problem.a} grup × {problem.b}'er{problem.a * problem.b <= 30 ? ` = ${Array.from({ length: problem.a }, () => problem.b).join(' + ')}` : ''}</p>
           </div>
         )}
 

@@ -138,10 +138,15 @@ function generateQuestion(module: Module, difficulty: Record<string, number>): Q
       return { module: 'addition', items, targetCount: a+b, groupA: a, groupB: b, answer: a+b }
     }
     case 'comparison': {
-      const maxN = Math.min(7, numRange)
+      const maxN = Math.min(7, Math.max(3, numRange))
       let a = 1 + Math.floor(Math.random() * maxN)
       let b = 1 + Math.floor(Math.random() * maxN)
-      if (a === b) b = Math.max(1, b - 1)
+      // a === b ise: artırabiliyorsak artır, değilse azalt (a=b=1 durumu dahil)
+      if (a === b) {
+        if (b < maxN) b = b + 1
+        else if (a > 1) a = a - 1
+        else b = 2 // son çare: maxN=1 gibi absürd bir ayar için
+      }
       const items: GameItem[] = []
       for (let i = 0; i < a; i++) {
         const pos = { x: 5 + Math.random() * 38, y: 15 + Math.random() * 55 }

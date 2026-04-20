@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { StarSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
-type ParaMode = 'count_coins' | 'total' | 'change' | 'budget' | 'compare'
+type ParaMode = 'count_coins' | 'total' | 'change' | 'compare' | 'select_coins'
 
 const PRODUCTS = [
   { name: 'Elma', price: 3, emoji: '🍎', category: 'meyve' },
@@ -78,28 +78,47 @@ export default function ParaPazari({ session, state }: { session: SessionManager
   const [streak, setStreak] = useState(0)
   const [showHint, setShowHint] = useState(false)
   const stimRef = useRef(Date.now())
-  const modes: ParaMode[] = ['count_coins', 'total', 'change', 'budget', 'compare']
+  const modes: ParaMode[] = ['count_coins', 'total', 'change', 'compare', 'select_coins']
 
   useEffect(() => {
     const m = modes[Math.floor(round / 3) % modes.length]; setMode(m)
 
     if (m === 'count_coins') {
-      // Generate random coins to count
+      // Tüm madeni paralar artık havuzda (1, 5, 10, 20, 50 TL)
       const coinSet: typeof COINS[0][] = []
       const numCoins = 3 + Math.floor(Math.random() * 4)
+      // Zorluk: başta düşük değerler ağırlık, ileri turlarda 20/50 TL de dahil
+      const poolSize = Math.min(5, 3 + Math.floor(round / 4))
       for (let i = 0; i < numCoins; i++) {
-        coinSet.push(COINS[Math.floor(Math.random() * 3)]) // 1, 5, 10 TL
+        coinSet.push(COINS[Math.floor(Math.random() * poolSize)])
       }
       setCoins(coinSet)
       setItems([])
+    } else if (m === 'select_coins') {
+      // Hangi paralarla ödersin? Tek ürün, birden fazla madeni para kombinasyonu
+      const product = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)]
+      setItems([product])
+      setCoins([])
+    } else if (m === 'compare') {
+      // Fiyatı farklı 2 ürün seç (aynı fiyatlı olmasın)
+      const shuffled = [...PRODUCTS].sort(() => Math.random() - 0.5)
+      let pair = shuffled.slice(0, 2)
+      let guard = 0
+      while (pair[0].price === pair[1].price && guard < 20) {
+        pair = [...PRODUCTS].sort(() => Math.random() - 0.5).slice(0, 2)
+        guard++
+      }
+      setItems(pair)
+      setCoins([])
     } else {
-      const count = m === 'compare' ? 2 : 2 + Math.floor(Math.random() * 2)
+      const count = 2 + Math.floor(Math.random() * 2)
       const selected = [...PRODUCTS].sort(() => Math.random() - 0.5).slice(0, count)
       setItems(selected)
       setCoins([])
       const total = selected.reduce((s, i) => s + i.price, 0)
-      if (m === 'change' || m === 'budget') {
-        setBudget(total + 3 + Math.floor(Math.random() * 12))
+      if (m === 'change') {
+        // Budget mutlaka total'den büyük olmalı
+        setBudget(total + 3 + Math.floor(Math.random() * 15))
       }
     }
     setInput(''); setFeedback(null); setShowHint(false); stimRef.current = Date.now()
@@ -113,7 +132,7 @@ export default function ParaPazari({ session, state }: { session: SessionManager
       case 'count_coins': return coinTotal
       case 'total': return total
       case 'change': return budget - total
-      case 'budget': return budget - total
+      case 'select_coins': return items[0]?.price || 0
       case 'compare': return items.length >= 2 ? Math.abs(items[0].price - items[1].price) : 0
       default: return 0
     }
@@ -124,7 +143,7 @@ export default function ParaPazari({ session, state }: { session: SessionManager
       case 'count_coins': return 'Bu paraların toplamı kaç TL?'
       case 'total': return 'Sepetteki ürünlerin toplam fiyatı kaç TL?'
       case 'change': return `${budget} TL verdin. Üstü kaç TL kalır?`
-      case 'budget': return `${budget} TL bütçen var. Alışverişten sonra kaç TL artıyor?`
+      case 'select_coins': return `${items[0]?.name} için tam ne kadar ödemelisin?`
       case 'compare': return items.length >= 2 ? `${items[0].name} ile ${items[1].name} arasındaki fiyat farkı kaç TL?` : ''
       default: return ''
     }
@@ -132,11 +151,11 @@ export default function ParaPazari({ session, state }: { session: SessionManager
 
   const getHint = (): string => {
     switch (mode) {
-      case 'count_coins': return `Paraları büyükten küçüğe sırala ve say: ${[...coins].sort((a, b) => b.value - a.value).map(c => c.value).join(' + ')}`
+      case 'count_coins': return `Paraları büyükten küçüğe topla: ${[...coins].sort((a, b) => b.value - a.value).map(c => c.value).join(' + ')}`
       case 'total': return `Fiyatları topla: ${items.map(i => i.price).join(' + ')} = ?`
       case 'change': return `Önce toplam: ${total} TL. Üstü: ${budget} - ${total} = ?`
-      case 'budget': return `Harcama: ${total} TL. Kalan: ${budget} - ${total} = ?`
-      case 'compare': return items.length >= 2 ? `Fark: ${Math.max(items[0].price, items[1].price)} - ${Math.min(items[0].price, items[1].price)} = ?` : ''
+      case 'select_coins': return `Fiyat etiketine bak: ${items[0]?.price} TL`
+      case 'compare': return items.length >= 2 ? `Büyükten küçüğü çıkar: ${Math.max(items[0].price, items[1].price)} - ${Math.min(items[0].price, items[1].price)} = ?` : ''
       default: return ''
     }
   }
@@ -159,7 +178,7 @@ export default function ParaPazari({ session, state }: { session: SessionManager
   }
 
   const answer = getAnswer()
-  const modeLabels: Record<ParaMode, string> = { count_coins: '🪙 Para Say', total: '🛒 Toplam Hesapla', change: '💵 Üstü Hesapla', budget: '📋 Bütçe Planla', compare: '⚖️ Fiyat Karşılaştır' }
+  const modeLabels: Record<ParaMode, string> = { count_coins: '🪙 Para Say', total: '🛒 Toplam Hesapla', change: '💵 Üstü Hesapla', select_coins: '💳 Tam Öde', compare: '⚖️ Fiyat Karşılaştır' }
 
   return (
     <div className="flex flex-col items-center justify-center h-full p-3 gap-3">
@@ -170,7 +189,7 @@ export default function ParaPazari({ session, state }: { session: SessionManager
 
       <div className="w-full max-w-lg rounded-2xl p-4" style={{ background: 'rgba(10,15,30,0.7)', border: '1px solid rgba(245,158,11,0.08)' }}>
         {/* Budget display */}
-        {(mode === 'change' || mode === 'budget') && (
+        {mode === 'change' && (
           <div className="flex items-center justify-center gap-2 mb-3 p-2 rounded-lg" style={{ background: 'rgba(234,179,8,0.06)', border: '1px solid rgba(234,179,8,0.12)' }}>
             <span className="text-lg">💵</span>
             <span className="text-lg font-black text-yellow-300">{budget} TL</span>
