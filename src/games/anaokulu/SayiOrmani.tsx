@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SquirrelSVG as CinemaSquirrel, ButterflySVG, RabbitSVG } from '@/components/cinema/characters'
+import { SquirrelSVG as CinemaSquirrel, ButterflySVG, RabbitSVG, FrogSVG, DuckSVG, CatSVG, BearSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 // === TYPES ===
@@ -18,7 +18,7 @@ interface GameItem {
   x: number
   y: number
   type: 'target' | 'distractor'
-  animal: 'squirrel' | 'rabbit' | 'hedgehog' | 'butterfly' | 'bird'
+  animal: 'squirrel' | 'rabbit' | 'hedgehog' | 'butterfly' | 'bird' | 'frog' | 'duck' | 'cat' | 'bear'
   counted: boolean
   variant: number
 }
@@ -66,7 +66,7 @@ function generateQuestion(module: Module, difficulty: Record<string, number>): Q
   const numRange = Math.min(9, 1 + (difficulty.number_range || 1))
   const distractorCount = Math.min(5, difficulty.distractor_count || 0)
   
-  const animals: GameItem['animal'][] = ['squirrel', 'rabbit', 'hedgehog', 'butterfly', 'bird']
+  const animals: GameItem['animal'][] = ['squirrel', 'rabbit', 'hedgehog', 'butterfly', 'bird', 'frog', 'duck', 'cat', 'bear']
   const positions: {x: number; y: number}[] = []
   
   // Generate non-overlapping positions
@@ -166,11 +166,15 @@ function generateQuestion(module: Module, difficulty: Record<string, number>): Q
 // === RENDER ANIMAL ===
 function AnimalSprite({ animal, variant, size }: { animal: string; variant: number; size: number }) {
   switch (animal) {
-    case 'squirrel': return <CinemaSquirrel size={size} />
-    case 'rabbit': return <RabbitSVG size={size} />
-    case 'hedgehog': return <HedgehogSVG size={size} />
+    case 'squirrel':  return <CinemaSquirrel size={size} />
+    case 'rabbit':    return <RabbitSVG size={size} />
+    case 'hedgehog':  return <HedgehogSVG size={size} />
     case 'butterfly': return <ButterflySVG size={size} />
-    default: return <span style={{ fontSize: size * 0.6 }}>🐦</span>
+    case 'frog':      return <FrogSVG size={size} />
+    case 'duck':      return <DuckSVG size={size} />
+    case 'cat':       return <CatSVG size={size} color={variant % 2 === 0 ? '#F4A460' : '#94A3B8'} />
+    case 'bear':      return <BearSVG size={size} />
+    default:          return <span style={{ fontSize: size * 0.6 }}>🐦</span>
   }
 }
 

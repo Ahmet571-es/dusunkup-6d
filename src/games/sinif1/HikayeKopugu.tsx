@@ -12,21 +12,38 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { OwlSVG, StarSVG } from '@/components/cinema/characters'
+import { OwlSVG, StarSVG, SquirrelSVG, RabbitSVG, BearSVG, FrogSVG, CatSVG, DuckSVG } from '@/components/cinema/characters'
 import { audioEngine } from '@/engine/audio/audioEngine'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 interface Story {
-  setup: string          // Giriş cümlesi: "Sincap 4 fındık topladı."
-  event: string          // Olay cümlesi: "Sonra 3 fındık daha buldu."
-  question: string       // Matematik sorusu: "Toplam kaç fındık var?"
-  comprehensionQ: string // Anlama kontrolü: "Bu hikaye hangi hayvanla ilgiliydi?"
-  compAnswer: string     // Anlama cevabı: "Sincap"
+  actorKey: string       // Aktör SVG için anahtar
+  setup: string          // Giriş cümlesi
+  event: string          // Olay cümlesi
+  question: string       // Matematik sorusu
+  comprehensionQ: string // Anlama kontrolü
+  compAnswer: string     // Anlama cevabı
   compOptions: string[]  // 3 seçenek
   answer: number         // Matematik cevabı
   a: number; b: number   // Sayılar
   op: 'add' | 'sub'      // İşlem türü
-  distractor?: number    // Hikâyede geçen ama yanıtta kullanılmayan sayı (opsiyonel)
+  distractor?: number
+}
+
+/** Aktör anahtarından sevimli SVG karakteri döndürür. */
+function ActorAvatar({ actorKey, size = 64 }: { actorKey: string; size?: number }) {
+  switch (actorKey) {
+    case 'squirrel': return <SquirrelSVG size={size} />
+    case 'rabbit':   return <RabbitSVG size={size} />
+    case 'bear':     return <BearSVG size={size} />
+    case 'owl':      return <OwlSVG size={size} />
+    case 'frog':     return <FrogSVG size={size} />
+    case 'cat':      return <CatSVG size={size} />
+    case 'duck':     return <DuckSVG size={size} />
+    // Tilki için henüz SVG yok — CatSVG ile turuncu renk kullan
+    case 'fox':      return <CatSVG size={size} color="#F97316" />
+    default:         return <SquirrelSVG size={size} />
+  }
 }
 
 // === ŞABLONLAR ===
@@ -44,30 +61,30 @@ const ACTORS = [
 
 const ADD_TEMPLATES: Array<(a: number, b: number, actor: typeof ACTORS[0]) => { setup: string; event: string; question: string }> = [
   (a, b, ac) => ({
-    setup: `${ac.emoji} ${ac.name} ${a} ${ac.item} ${ac.verb}.`,
+    setup: `${ac.name} ${a} ${ac.item} ${ac.verb}.`,
     event: `Sonra ${b} ${ac.item} daha ${ac.verb.endsWith('ı') ? 'topladı' : 'buldu'}.`,
     question: `Toplam kaç ${ac.item} var?`,
   }),
   (a, b, ac) => ({
-    setup: `${ac.emoji} ${ac.name}'ın sepetinde ${a} ${ac.item} vardı.`,
+    setup: `${ac.name}'ın sepetinde ${a} ${ac.item} vardı.`,
     event: `Arkadaşı ${b} ${ac.item} daha getirdi.`,
     question: `Şimdi sepette kaç ${ac.item} var?`,
   }),
   (a, b, ac) => ({
     setup: `Bahçede ${a} ${ac.item} vardı.`,
-    event: `${ac.emoji} ${ac.name} ${b} ${ac.item} daha ekledi.`,
+    event: `${ac.name} ${b} ${ac.item} daha ekledi.`,
     question: `Bahçede toplam kaç ${ac.item} oldu?`,
   }),
 ]
 
 const SUB_TEMPLATES: Array<(a: number, b: number, actor: typeof ACTORS[0]) => { setup: string; event: string; question: string }> = [
   (a, b, ac) => ({
-    setup: `${ac.emoji} ${ac.name}'ın ${a} ${ac.item}'ı vardı.`,
+    setup: `${ac.name}'ın ${a} ${ac.item}'ı vardı.`,
     event: `${b} tanesini harcadı.`,
     question: `Kaç ${ac.item} kaldı?`,
   }),
   (a, b, ac) => ({
-    setup: `${ac.emoji} ${ac.name} ${a} ${ac.item} ${ac.verb}.`,
+    setup: `${ac.name} ${a} ${ac.item} ${ac.verb}.`,
     event: `Ama ${b} tanesi kayboldu.`,
     question: `Elinde kaç ${ac.item} kaldı?`,
   }),
@@ -114,6 +131,7 @@ function generateStory(difficulty: Record<string, number>): Story {
   const compOptions = shuffle([actor.name, distractors[0].name, distractors[1].name])
 
   return {
+    actorKey: actor.key,
     setup, event, question,
     comprehensionQ: 'Hikâye hangi hayvanla ilgiliydi?',
     compAnswer: actor.name,
@@ -202,8 +220,11 @@ export default function HikayeKopugu({ session, state }: { session: SessionManag
           {phase === 'story' && (
             <motion.div key="story" className="text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <div className="flex items-start gap-3 justify-center mb-3">
-                <div className="flex-shrink-0"><OwlSVG size={52} /></div>
-                <div className="text-left">
+                <div className="flex-shrink-0 flex flex-col items-center gap-1">
+                  <OwlSVG size={44} />
+                  <span className="text-[9px] text-white/30">Anlatıcı</span>
+                </div>
+                <div className="text-left flex-1">
                   <motion.p className="text-base text-white/85 leading-relaxed mb-1.5"
                     initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
                     {story.setup}
@@ -213,6 +234,11 @@ export default function HikayeKopugu({ session, state }: { session: SessionManag
                     {story.event}
                   </motion.p>
                 </div>
+                <motion.div className="flex-shrink-0 flex flex-col items-center gap-1"
+                  initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, type: 'spring', stiffness: 180 }}>
+                  <ActorAvatar actorKey={story.actorKey} size={60} />
+                  <span className="text-[9px] text-white/40 font-bold">{story.compAnswer}</span>
+                </motion.div>
               </div>
               <div className="flex items-center justify-center gap-1 mt-3">
                 {[0, 1, 2].map(i => (
@@ -227,19 +253,25 @@ export default function HikayeKopugu({ session, state }: { session: SessionManag
           {phase === 'comprehension' && (
             <motion.div key="comp" className="text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
               <p className="text-base font-bold text-cyan-300 mb-4">{story.comprehensionQ}</p>
-              <div className="flex gap-2 justify-center flex-wrap">
-                {story.compOptions.map(opt => (
-                  <motion.button key={opt} className="px-4 py-2.5 rounded-xl text-sm font-bold"
-                    style={{
-                      background: compFeedback && opt === story.compAnswer ? 'rgba(52,211,153,0.2)' : 'rgba(255,255,255,0.06)',
-                      border: `1.5px solid ${compFeedback && opt === story.compAnswer ? 'rgba(52,211,153,0.4)' : 'rgba(255,255,255,0.1)'}`,
-                      color: 'white',
-                    }}
-                    whileHover={{ scale: compFeedback ? 1 : 1.05 }} whileTap={{ scale: 0.95 }}
-                    onClick={() => handleComprehension(opt)} disabled={!!compFeedback}>
-                    {opt}
-                  </motion.button>
-                ))}
+              <div className="flex gap-3 justify-center flex-wrap">
+                {story.compOptions.map(opt => {
+                  // Hangi actor bu isme sahip?
+                  const actorMatch = ACTORS.find(a => a.name === opt)
+                  const keyFor = actorMatch?.key || 'squirrel'
+                  return (
+                    <motion.button key={opt}
+                      className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-2xl"
+                      style={{
+                        background: compFeedback && opt === story.compAnswer ? 'rgba(52,211,153,0.18)' : 'rgba(255,255,255,0.05)',
+                        border: `1.5px solid ${compFeedback && opt === story.compAnswer ? 'rgba(52,211,153,0.45)' : 'rgba(255,255,255,0.1)'}`,
+                      }}
+                      whileHover={{ scale: compFeedback ? 1 : 1.08 }} whileTap={{ scale: 0.95 }}
+                      onClick={() => handleComprehension(opt)} disabled={!!compFeedback}>
+                      <ActorAvatar actorKey={keyFor} size={44} />
+                      <span className="text-xs font-bold text-white">{opt}</span>
+                    </motion.button>
+                  )
+                })}
               </div>
               {compFeedback === 'wrong' && (
                 <motion.p className="text-xs text-orange-300 mt-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>

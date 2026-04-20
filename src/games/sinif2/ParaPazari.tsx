@@ -5,25 +5,46 @@
  */
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { StarSVG } from '@/components/cinema/characters'
+import { StarSVG, AppleSVG, CarrotSVG } from '@/components/cinema/characters'
 import type { SessionManager, SessionState } from '@/engine/assessment/sessionManager'
 
 type ParaMode = 'count_coins' | 'total' | 'change' | 'compare' | 'select_coins'
 
 const PRODUCTS = [
-  { name: 'Elma', price: 3, emoji: '🍎', category: 'meyve' },
-  { name: 'Armut', price: 4, emoji: '🍐', category: 'meyve' },
-  { name: 'Ekmek', price: 5, emoji: '🍞', category: 'temel' },
-  { name: 'Süt', price: 7, emoji: '🥛', category: 'temel' },
-  { name: 'Peynir', price: 9, emoji: '🧀', category: 'temel' },
-  { name: 'Defter', price: 4, emoji: '📓', category: 'kırtasiye' },
-  { name: 'Kalem', price: 2, emoji: '✏️', category: 'kırtasiye' },
-  { name: 'Silgi', price: 1, emoji: '🧽', category: 'kırtasiye' },
-  { name: 'Çikolata', price: 6, emoji: '🍫', category: 'atıştırma' },
-  { name: 'Bisküvi', price: 4, emoji: '🍪', category: 'atıştırma' },
-  { name: 'Su', price: 2, emoji: '💧', category: 'içecek' },
-  { name: 'Meyve Suyu', price: 8, emoji: '🧃', category: 'içecek' },
+  { name: 'Elma',       price: 3, emoji: '🍎', category: 'meyve',     svg: 'apple'  },
+  { name: 'Armut',      price: 4, emoji: '🍐', category: 'meyve',     svg: 'apple-green' },
+  { name: 'Ekmek',      price: 5, emoji: '🍞', category: 'temel',     svg: null     },
+  { name: 'Süt',        price: 7, emoji: '🥛', category: 'temel',     svg: null     },
+  { name: 'Peynir',     price: 9, emoji: '🧀', category: 'temel',     svg: null     },
+  { name: 'Defter',     price: 4, emoji: '📓', category: 'kırtasiye', svg: null     },
+  { name: 'Kalem',      price: 2, emoji: '✏️', category: 'kırtasiye', svg: null     },
+  { name: 'Silgi',      price: 1, emoji: '🧽', category: 'kırtasiye', svg: null     },
+  { name: 'Çikolata',   price: 6, emoji: '🍫', category: 'atıştırma', svg: null     },
+  { name: 'Bisküvi',    price: 4, emoji: '🍪', category: 'atıştırma', svg: null     },
+  { name: 'Su',         price: 2, emoji: '💧', category: 'içecek',    svg: null     },
+  { name: 'Meyve Suyu', price: 8, emoji: '🧃', category: 'içecek',    svg: null     },
+  { name: 'Havuç',      price: 3, emoji: '🥕', category: 'sebze',     svg: 'carrot' },
 ]
+
+/** Ürün ikonu — SVG varsa onu, yoksa emoji'yi sıcak gradient kartta gösterir. */
+function ProductIcon({ product, size = 32 }: { product: typeof PRODUCTS[0]; size?: number }) {
+  if (product.svg === 'apple')       return <AppleSVG size={size} color="#EF4444" />
+  if (product.svg === 'apple-green') return <AppleSVG size={size} color="#22C55E" />
+  if (product.svg === 'carrot')      return <CarrotSVG size={size} />
+  // Emoji fallback: sıcak gradient arka plana yerleştir
+  return (
+    <div style={{
+      width: size, height: size,
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      background: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.15), rgba(255,255,255,0.02))',
+      border: '1px solid rgba(255,255,255,0.1)',
+      borderRadius: size * 0.3,
+      boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.1), 0 2px 4px rgba(0,0,0,0.15)',
+    }}>
+      <span style={{ fontSize: size * 0.7, lineHeight: 1, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' }}>{product.emoji}</span>
+    </div>
+  )
+}
 
 const COINS = [
   { value: 1, label: '1 TL', color: '#C0C0C0', size: 24 },
@@ -55,10 +76,10 @@ function CoinSVG({ coin, size = 28 }: { coin: typeof COINS[0]; size?: number }) 
 
 function PriceTag({ item }: { item: typeof PRODUCTS[0] }) {
   return (
-    <motion.div className="px-3 py-3 rounded-xl text-center min-w-[72px]"
+    <motion.div className="px-3 py-3 rounded-xl text-center min-w-[72px] flex flex-col items-center"
       style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-      <span className="text-2xl block mb-1">{item.emoji}</span>
+      <div className="mb-1"><ProductIcon product={item} size={36} /></div>
       <span className="text-[10px] text-white/40 block">{item.name}</span>
       <div className="mt-1 px-2 py-0.5 rounded-md inline-block" style={{ background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.2)' }}>
         <span className="text-xs font-black text-yellow-300">{item.price} TL</span>
